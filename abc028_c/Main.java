@@ -1,3 +1,5 @@
+import static java.util.Comparator.reverseOrder;
+
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -26,7 +28,7 @@ public class Main {
 
 		int[] array =
 			set.stream()
-				.sorted((o1, o2) -> o2 - o1)
+				.sorted(reverseOrder())
 				.mapToInt(i -> i)
 				.toArray();
 
