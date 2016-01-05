@@ -1,26 +1,30 @@
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.TreeSet;
 
 public class Main {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-
-		Set<Integer> A = new TreeSet<>();
-		Set<Integer> used = new HashSet<>(N);
+		int[] A = new int[N];
 		for (int i = 0; i < N; i++) {
-			A.add(sc.nextInt());
+			A[i] = sc.nextInt();
 		}
+		Arrays.sort(A);
 
+		Set<Integer> used = new HashSet<>(N);
 		int count = 0;
-		for (Integer val : A) {
+		for (int val : A) {
 			if (!used.contains(val)) {
 				count++;
-			}
 
-			used.add(val * 2);
+				int temp = val * 2;
+				while (temp <= 1000000000) {
+					used.add(temp);
+					temp *= 2;
+				}
+			}
 		}
 
 		System.out.println(count);
