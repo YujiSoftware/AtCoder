@@ -3,6 +3,8 @@ import static org.hamcrest.CoreMatchers.is;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -68,6 +70,21 @@ public class MainTest {
 				"4";
 		String output =
 			"0";
+
+		assertIO(input, output);
+	}
+
+	@Test()
+	public void 入力例5() throws Exception {
+		String input = "";
+		input +=
+			"100000 1000000000" + System.lineSeparator();
+		input +=
+			String.join(System.lineSeparator(),
+				Stream.generate(() -> "1").limit(100000).collect(Collectors.toList()));
+
+		String output =
+			"100000";
 
 		assertIO(input, output);
 	}
