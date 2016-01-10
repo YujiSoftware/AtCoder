@@ -33,7 +33,12 @@ public class Main {
 
 					long sum = s[j];
 					for (int k = 1; k < i; k++) {
-						sum *= s[j + k];
+						if (s[j + k] != 1) {
+							sum *= s[j + k];
+						}
+						if (sum > K) {
+							break;
+						}
 					}
 
 					if (sum <= K) {
