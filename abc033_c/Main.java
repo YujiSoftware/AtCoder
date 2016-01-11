@@ -14,6 +14,8 @@ public class Main {
 		int length = 0;
 		if (IntStream.of(s).anyMatch(i -> i == 0)) {
 			length = N;
+		} else if (IntStream.of(s).allMatch(i -> i == 1)) {
+			length = K == 0 ? 0 : N;
 		} else {
 			boolean[] skip = new boolean[N];
 			for (int i = 0; i < N; i++) {
