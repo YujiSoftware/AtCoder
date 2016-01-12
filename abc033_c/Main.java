@@ -14,8 +14,6 @@ public class Main {
 		int length = 0;
 		if (IntStream.of(s).anyMatch(i -> i == 0)) {
 			length = N;
-		} else if (IntStream.of(s).allMatch(i -> i == 1)) {
-			length = K == 0 ? 0 : N;
 		} else {
 			boolean[] skip = new boolean[N];
 			for (int i = 0; i < N; i++) {
@@ -24,7 +22,11 @@ public class Main {
 				}
 			}
 
-			OuterLoop: for (int i = 1; i <= N; i++) {
+			int left = 1;
+			int right = N;
+			OuterLoop: while (left <= right) {
+				int i = (left + right) / 2;
+
 				InnerLoop: for (int j = 0; j <= N - i; j++) {
 					for (int k = i - 1; k >= 0; k--) {
 						if (skip[j + k]) {
@@ -44,11 +46,14 @@ public class Main {
 					}
 
 					if (sum <= K) {
-						length = i;
+						length = Math.max(i, length);
+
+						left = i + 1;
 						continue OuterLoop;
 					}
 				}
-				break;
+
+				right = i - 1;
 			}
 		}
 
