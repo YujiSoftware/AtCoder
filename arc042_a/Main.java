@@ -11,7 +11,7 @@ class Main
 		int M = sc.nextInt();
 		int[] a = new int[M];
 		for (int i = 0; i < M; i++) {
-			a[i] = sc.nextInt();
+			a[i] = Integer.parseInt(sc.next());
 		}
 
 		// スレッドの初期化
