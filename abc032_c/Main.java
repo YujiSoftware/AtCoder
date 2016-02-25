@@ -1,14 +1,18 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.stream.IntStream;
 
 public class Main {
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		int K = sc.nextInt();
+	public static void main(String[] args) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		String[] NK = reader.readLine().split(" ");
+		int N = Integer.parseInt(NK[0]);
+		int K = Integer.parseInt(NK[1]);
+
 		int[] s = new int[N];
 		for (int i = 0; i < s.length; i++) {
-			s[i] = sc.nextInt();
+			s[i] = Integer.parseInt(reader.readLine());
 		}
 
 		int length = 0;
