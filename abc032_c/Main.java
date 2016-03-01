@@ -4,6 +4,11 @@ import java.io.InputStreamReader;
 import java.util.stream.IntStream;
 
 public class Main {
+
+	/**
+	 * AtCoder Beginner Contest 032 解説
+	 * http://www.slideshare.net/chokudai/abc032
+	 */
 	public static void main(String[] args) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		String[] NK = reader.readLine().split(" ");
@@ -18,29 +23,27 @@ public class Main {
 		int length = 0;
 		if (IntStream.of(s).anyMatch(i -> i == 0)) {
 			length = N;
-		} else {
+		} else if (true) {
+			long sum = 1;
 			int left = 0;
 
-			while (true) {
-				int sum = 1;
-				int right;
+			for (int right = 0; right < N; right++) {
+				sum *= s[right];
 
-				for (right = left; right < N; right++) {
-					sum *= s[right];
-					if (sum > K) {
-						break;
-					}
-
+				if (sum <= K) {
 					length = Math.max(right - left + 1, length);
+				} else {
+					while (sum > K) {
+						sum /= s[left];
+						left++;
+						if (left >= right) {
+							break;
+						}
+					}
 				}
-
-				if (right == N) {
-					break;
-				}
-
-				left++;
 			}
 		}
+
 		System.out.println(length);
 	}
 }
