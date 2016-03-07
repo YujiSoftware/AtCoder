@@ -2,23 +2,40 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 public class Main {
 
 	public static void main(String[] args) throws IOException {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		int a = sc.nextInt();
+		int a = sc.nextInt() - 1;
 		BigInteger k = new BigInteger(sc.next());
-		int[] b = sc.nextInt(N);
-
-		int next = a;
-		for (BigInteger i = BigInteger.ZERO; i.compareTo(k) < 0; i = i.add(BigInteger.ONE)) {
-			next = b[next - 1];
-			// System.err.println(next);
+		int[] b = new int[N];
+		for (int i = 0; i < N; i++) {
+			b[i] = sc.nextInt() - 1;
 		}
 
-		System.out.println(next);
+		LinkedHashSet<Integer> map = new LinkedHashSet<>();
+
+		int next = a;
+		while (map.add(next)) {
+			next = b[next];
+		}
+
+		int value;
+		if (k.compareTo(BigInteger.valueOf(map.size())) < 0) {
+			value = map.stream().skip(k.intValue()).findFirst().get();
+		} else {
+			int index = new ArrayList<>(map).indexOf(next);
+			int m = map.size() - index;
+			int mod = k.subtract(BigInteger.valueOf(next)).mod(BigInteger.valueOf(m)).intValue();
+
+			value = map.stream().skip(next + mod).findFirst().get();
+		}
+
+		System.out.println(value + 1);
 	}
 
 	public static class Scanner {
