@@ -10,11 +10,11 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		int a = sc.nextInt() - 1;
+		int a = sc.nextInt();
 		BigInteger k = new BigInteger(sc.next());
-		int[] b = new int[N];
-		for (int i = 0; i < N; i++) {
-			b[i] = sc.nextInt() - 1;
+		int[] b = new int[N + 1];
+		for (int i = 1; i <= N; i++) {
+			b[i] = sc.nextInt();
 		}
 
 		LinkedHashSet<Integer> map = new LinkedHashSet<>();
@@ -24,18 +24,20 @@ public class Main {
 			next = b[next];
 		}
 
+		ArrayList<Integer> list = new ArrayList<>(map);
+
 		int value;
 		if (k.compareTo(BigInteger.valueOf(map.size())) < 0) {
-			value = map.stream().skip(k.intValue()).findFirst().get();
+			value = list.get(k.intValue() - 1);
 		} else {
-			int index = new ArrayList<>(map).indexOf(next);
-			int m = map.size() - index;
-			int mod = k.subtract(BigInteger.valueOf(next)).mod(BigInteger.valueOf(m)).intValue();
+			int start = list.indexOf(next);
+			int m = map.size() - start;
+			int index = k.subtract(BigInteger.valueOf(start)).mod(BigInteger.valueOf(m)).intValue();
 
-			value = map.stream().skip(next + mod).findFirst().get();
+			value = list.get(index);
 		}
 
-		System.out.println(value + 1);
+		System.out.println(value);
 	}
 
 	public static class Scanner {
