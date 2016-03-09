@@ -28,13 +28,13 @@ public class Main {
 
 		int value;
 		if (k.compareTo(BigInteger.valueOf(map.size())) < 0) {
-			value = list.get(k.intValue() - 1);
+			value = list.get(k.intValue());
 		} else {
 			int start = list.indexOf(next);
 			int m = map.size() - start;
 			int index = k.subtract(BigInteger.valueOf(start)).mod(BigInteger.valueOf(m)).intValue();
 
-			value = list.get(index);
+			value = list.get(start + index);
 		}
 
 		System.out.println(value);
