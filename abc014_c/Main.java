@@ -14,45 +14,22 @@ public class Main {
 			b[i] = sc.nextInt();
 		}
 
-		int[] color = new int[1000001];
+		int[] color = new int[1000002];
 		for (int i = 0; i < n; i++) {
-			for (int j = a[i]; j <= b[i]; j++) {
-				color[j]++;
-			}
+			color[a[i]]++;
+			color[b[i] + 1]--;
 		}
 
-		int max = color[0];
-		for (int i = 1; i < color.length; i++) {
-			if (max < color[i]) {
-				max = color[i];
+		int now = 0;
+		int max = 0;
+		for (int i = 0; i < color.length - 1; i++) {
+			now += color[i];
+			if (max < now) {
+				max = now;
 			}
 		}
 
 		System.out.println(max);
-	}
-
-	private static boolean test(int index, int value, int[][] T) {
-		if (index == T.length) {
-			return value == 0;
-		}
-
-		for (int i = 0; i < T[index].length; i++) {
-			if (test(index + 1, value ^ T[index][i], T)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	private static class Point {
-		public int x;
-		public int y;
-
-		public Point(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
 	}
 
 	public static class Scanner {
