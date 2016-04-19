@@ -10,10 +10,10 @@ public class Main {
 
 		long a = 1;
 		long b = 1;
-		for (int i = 0; i < K - 1; i++) {
-			long tmp = b;
-			b = b * 2 + a;
-			a = tmp;
+		for (int i = 0; i < K; i++) {
+			long tmp = a;
+			a += b;
+			b = tmp;
 		}
 
 		System.out.println(a + " " + b);
