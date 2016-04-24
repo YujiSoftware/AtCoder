@@ -1,6 +1,8 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 public class Main {
 
@@ -14,55 +16,39 @@ public class Main {
 		int D = sc.nextInt();
 		int E = sc.nextInt();
 
-		int money = 0;
-		int satiety = H;
-		for (int i = 0; i < N; i++) {
-			if (satiety - E <= 0) {
-				if (satiety + D <= 0) {
-					money += A;
-					satiety += B;
-					System.err.println("普通 " + satiety);
-				} else {
-					money += C;
-					satiety += D;
-					System.err.println("質素 " + satiety);
-				}
+		int min = Integer.MAX_VALUE;
+
+		Queue<Box> queue = new ArrayDeque<>();
+		queue.add(new Box(0, H, 0));
+		while (!queue.isEmpty()) {
+			Box box = queue.poll();
+			if (box.day == N) {
+				min = Math.min(min, box.money);
 			} else {
-				money += 0;
-				satiety -= E;
-				System.err.println("食事抜き " + satiety);
+				// 普通
+				queue.add(new Box(box.money + A, box.satiety + B, box.day + 1));
+				// 質素
+				queue.add(new Box(box.money + C, box.satiety + D, box.day + 1));
+				// 食事抜き
+				if (box.satiety - E > 0) {
+					queue.add(new Box(box.money + 0, box.satiety - E, box.day + 1));
+				}
 			}
 		}
-		System.err.println();
 
-		System.out.println(money);
+		System.out.println(min);
 	}
 
-	public static class Pair {
-		private int key;
-		private int value;
+	public static class Box {
+		public int money;
+		public int satiety;
+		public int day;
 
-		public Pair(int key, int value) {
+		public Box(int money, int satiety, int day) {
 			super();
-			this.key = key;
-			this.value = value;
-		}
-
-		public int getKey() {
-			return key;
-		}
-
-		public int getValue() {
-			return value;
-		}
-
-		public void setValue(int value) {
-			this.value = value;
-		}
-
-		@Override
-		public String toString() {
-			return "{" + key + ", " + value + "}";
+			this.money = money;
+			this.satiety = satiety;
+			this.day = day;
 		}
 	}
 
