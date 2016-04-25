@@ -1,37 +1,25 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayDeque;
-import java.util.Queue;
 
 public class Main {
 
 	public static void main(String[] args) throws IOException {
 		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		int H = sc.nextInt();
-		int A = sc.nextInt();
-		int B = sc.nextInt();
-		int C = sc.nextInt();
-		int D = sc.nextInt();
-		int E = sc.nextInt();
+		long N = sc.nextLong();
+		long H = sc.nextLong();
+		long A = sc.nextLong();
+		long B = sc.nextLong();
+		long C = sc.nextLong();
+		long D = sc.nextLong();
+		long E = sc.nextLong();
 
-		int min = Integer.MAX_VALUE;
-
-		Queue<Box> queue = new ArrayDeque<>();
-		queue.add(new Box(0, H, 0));
-		while (!queue.isEmpty()) {
-			Box box = queue.poll();
-			if (box.day == N) {
-				min = Math.min(min, box.money);
-			} else {
-				// 普通
-				queue.add(new Box(box.money + A, box.satiety + B, box.day + 1));
-				// 質素
-				queue.add(new Box(box.money + C, box.satiety + D, box.day + 1));
-				// 食事抜き
-				if (box.satiety - E > 0) {
-					queue.add(new Box(box.money + 0, box.satiety - E, box.day + 1));
+		long min = Integer.MAX_VALUE;
+		for (int i = 0; i <= N; i++) {
+			for (int j = 0; j <= N; j++) {
+				long satiety = H + B * i + D * j - (N - i - j) * E;
+				if (satiety > 0) {
+					min = Math.min(A * i + C * j, min);
 				}
 			}
 		}
