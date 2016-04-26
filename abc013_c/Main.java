@@ -14,14 +14,15 @@ public class Main {
 		long D = sc.nextLong();
 		long E = sc.nextLong();
 
-		long min = Integer.MAX_VALUE;
+		long min = Long.MAX_VALUE;
 		for (int i = 0; i <= N; i++) {
-			for (int j = 0; j <= N; j++) {
-				long satiety = H + B * i + D * j - (N - i - j) * E;
-				if (satiety > 0) {
-					min = Math.min(A * i + C * j, min);
-				}
+			long k = ((N - i) * E - H - B * i);
+			long j = 0;
+			if (k > 0) {
+				j = k / (D + E) + 1;
 			}
+
+			min = Math.min(A * i + C * j, min);
 		}
 
 		System.out.println(min);
