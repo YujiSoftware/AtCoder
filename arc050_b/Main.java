@@ -11,18 +11,18 @@ public class Main {
 		long x = sc.nextLong();
 		long y = sc.nextLong();
 
-		long result = 0;
-		if (R >= B / y) {
-			result += B / y;
-			R -= result;
-			result += Math.min(R / x, B % y);
-		} else {
-			result += R / x;
-			B -= result;
-			result += Math.min(B / y, R % x);
+		long max = Long.MIN_VALUE;
+		for (int i = 0; i < R; i++) {
+			long tmpR = R - (i * x);
+			long tmpB = B - i;
+
+			long sum = i;
+			sum += Math.min(tmpR, tmpB / y);
+
+			max = Math.max(max, sum);
 		}
 
-		System.out.println(result);
+		System.out.println(max);
 	}
 
 	public static class Scanner {
