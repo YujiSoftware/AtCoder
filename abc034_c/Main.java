@@ -1,45 +1,40 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayDeque;
-import java.util.Queue;
 
 public class Main {
+
+	private static int MOD = 1_000_000_007;
 
 	public static void main(String[] args) throws IOException {
 		Scanner sc = new Scanner(System.in);
 		int W = sc.nextInt();
 		int H = sc.nextInt();
 
-		Queue<Point> queue = new ArrayDeque<>();
-		queue.add(new Point(1, 1));
+		int[][] grid = new int[2][];
+		for (int i = 0; i < 2; i++) {
+			grid[i] = new int[W];
+		}
 
-		long count = 0;
-		while (!queue.isEmpty()) {
-			Point p = queue.poll();
-			if (p.x == W && p.y == H) {
-				count++;
-			} else {
-				if (p.x < W) {
-					queue.add(new Point(p.x + 1, p.y));
+		for (int y = 0; y < H; y++) {
+			for (int x = 0; x < W; x++) {
+				int sum = 0;
+				if (x == 0 && y == 0) {
+					sum = 1;
+				} else {
+					if (x - 1 >= 0) {
+						sum += grid[y % 2][x - 1];
+					}
+					if (y - 1 >= 0) {
+						sum += grid[(y - 1) % 2][x];
+					}
 				}
-				if (p.y < H) {
-					queue.add(new Point(p.x, p.y + 1));
-				}
+
+				grid[y % 2][x] = sum % MOD;
 			}
 		}
 
-		System.out.println(count);
-	}
-
-	private static class Point {
-		public int x;
-		public int y;
-
-		public Point(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
+		System.out.println(grid[(H - 1) % 2][W - 1]);
 	}
 
 	public static class Scanner {
