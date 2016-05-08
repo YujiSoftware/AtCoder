@@ -41,21 +41,23 @@ public class Main {
 			}
 		}
 
-		Queue<List<Cell>> queue = new ArrayDeque<>();
-		queue.add(Collections.singletonList(new Cell(start.x, start.y)));
+		int max = T;
+		int min = 1;
+		int result = 0;
 
-		int max = 0;
+		while (min < max) {
+			int mid = min + ((max - min) / 2);
 
-		while (!queue.isEmpty()) {
-			List<Cell> list = queue.poll();
-			Cell last = list.get(list.size() - 1);
+			Queue<List<Cell>> queue = new ArrayDeque<>();
+			queue.add(Collections.singletonList(new Cell(start.x, start.y)));
 
-			if (last.x == goal.x && last.y == goal.y) {
-				// 開始地点は除外（移動先のみを考慮すればよい）
-				list.remove(0);
+			boolean success = false;
+			while (!queue.isEmpty()) {
+				List<Cell> list = queue.poll();
+				Cell last = list.get(list.size() - 1);
 
 				int black = 0;
-				int white = 0;
+				int white = -1; // 開始地点は除外
 				for (Cell cell : list) {
 					if (isWhite(map[cell.y][cell.x])) {
 						white++;
@@ -64,33 +66,47 @@ public class Main {
 					}
 				}
 
-				max = Math.max(max, (T - white) / black);
-				continue;
+				if (black > 0 && (T - white) / black < mid) {
+					continue;
+				}
+
+				if (last.x == goal.x && last.y == goal.y) {
+					success = true;
+					break;
+				}
+
+				for (int i = 0; i < cells.length; i++) {
+					Cell next = new Cell(last.x + cells[i].x, last.y + cells[i].y);
+
+					boolean found = false;
+					for (Cell cell : list) {
+						if (next.x == cell.x && next.y == cell.y) {
+							found = true;
+							break;
+						}
+					}
+
+					if (!found) {
+						if (next.x >= 0 && next.x < W && next.y >= 0 && next.y < H) {
+							List<Cell> copy = new ArrayList<>(list);
+							copy.add(next);
+
+							queue.add(copy);
+						}
+					}
+				}
 			}
 
-			for (int i = 0; i < cells.length; i++) {
-				Cell next = new Cell(last.x + cells[i].x, last.y + cells[i].y);
-
-				boolean found = false;
-				for (Cell cell : list) {
-					if (next.x == cell.x && next.y == cell.y) {
-						found = true;
-						break;
-					}
-				}
-
-				if (!found) {
-					if (next.x >= 0 && next.x < W && next.y >= 0 && next.y < H) {
-						List<Cell> copy = new ArrayList<>(list);
-						copy.add(next);
-
-						queue.add(copy);
-					}
-				}
+			if (success) {
+				min = mid + 1;
+				result = min;
+			} else {
+				max = mid - 1;
+				result = max;
 			}
 		}
 
-		System.out.println(max);
+		System.out.println(result);
 	}
 
 	private static boolean isWhite(char c) {
