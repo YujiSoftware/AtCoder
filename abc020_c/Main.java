@@ -43,9 +43,8 @@ public class Main {
 
 		int max = T;
 		int min = 1;
-		int result = 0;
 
-		while (min < max) {
+		while (max - min > 1) {
 			int mid = min + ((max - min) / 2);
 
 			Queue<List<Cell>> queue = new ArrayDeque<>();
@@ -78,16 +77,8 @@ public class Main {
 				for (int i = 0; i < cells.length; i++) {
 					Cell next = new Cell(last.x + cells[i].x, last.y + cells[i].y);
 
-					boolean found = false;
-					for (Cell cell : list) {
-						if (next.x == cell.x && next.y == cell.y) {
-							found = true;
-							break;
-						}
-					}
-
-					if (!found) {
-						if (next.x >= 0 && next.x < W && next.y >= 0 && next.y < H) {
+					if (!list.contains(next)) {
+						if (0 <= next.x && next.x < W && 0 <= next.y && next.y < H) {
 							List<Cell> copy = new ArrayList<>(list);
 							copy.add(next);
 
@@ -97,16 +88,15 @@ public class Main {
 				}
 			}
 
+			System.err.println(min + ", " + max + ", " + mid);
 			if (success) {
-				min = mid + 1;
-				result = min;
+				min = mid;
 			} else {
-				max = mid - 1;
-				result = max;
+				max = mid;
 			}
 		}
 
-		System.out.println(result);
+		System.out.println(min);
 	}
 
 	private static boolean isWhite(char c) {
@@ -120,6 +110,31 @@ public class Main {
 		public Cell(int x, int y) {
 			this.x = x;
 			this.y = y;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + x;
+			result = prime * result + y;
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Cell other = (Cell) obj;
+			if (x != other.x)
+				return false;
+			if (y != other.y)
+				return false;
+			return true;
 		}
 
 		@Override
