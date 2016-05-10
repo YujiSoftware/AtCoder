@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 
@@ -47,48 +46,34 @@ public class Main {
 		while (max - min > 1) {
 			int mid = min + ((max - min) / 2);
 
-			Queue<List<Cell>> queue = new ArrayDeque<>();
-			queue.add(Collections.singletonList(new Cell(start.x, start.y)));
+			Queue<Status> queue = new ArrayDeque<>();
+			queue.add(new Status(new Cell(start.x, start.y)));
 
 			boolean success = false;
 			while (!queue.isEmpty()) {
-				List<Cell> list = queue.poll();
-				Cell last = list.get(list.size() - 1);
+				Status status = queue.poll();
 
-				int black = 0;
-				int white = -1; // 開始地点は除外
-				for (Cell cell : list) {
-					if (isWhite(map[cell.y][cell.x])) {
-						white++;
-					} else {
-						black++;
-					}
-				}
-
-				if (black > 0 && (T - white) / black < mid) {
+				if (status.black > 0 && (T - status.white) / status.black < mid) {
 					continue;
 				}
 
-				if (last.x == goal.x && last.y == goal.y) {
+				if (status.history.contains(goal)) {
 					success = true;
 					break;
 				}
 
 				for (int i = 0; i < cells.length; i++) {
-					Cell next = new Cell(last.x + cells[i].x, last.y + cells[i].y);
+					Cell current = status.current;
+					Cell next = new Cell(current.x + cells[i].x, current.y + cells[i].y);
 
-					if (!list.contains(next)) {
+					if (!status.history.contains(next)) {
 						if (0 <= next.x && next.x < W && 0 <= next.y && next.y < H) {
-							List<Cell> copy = new ArrayList<>(list);
-							copy.add(next);
-
-							queue.add(copy);
+							queue.add(new Status(status, next, isWhite(map[next.y][next.x])));
 						}
 					}
 				}
 			}
 
-			System.err.println(min + ", " + max + ", " + mid);
 			if (success) {
 				min = mid;
 			} else {
@@ -101,6 +86,36 @@ public class Main {
 
 	private static boolean isWhite(char c) {
 		return c == '.' || c == 'S' || c == 'G';
+	}
+
+	private static class Status {
+		private List<Cell> history;
+
+		private Cell current;
+
+		private int white;
+		private int black;
+
+		private Status(Status status, Cell next, boolean isWhite) {
+			this.history = new ArrayList<>(status.history);
+			this.add(next);
+
+			this.white = status.white + (isWhite ? 1 : 0);
+			this.black = status.black + (isWhite ? 0 : 1);
+		}
+
+		public Status(Cell cell) {
+			this.history = new ArrayList<>();
+			this.add(cell);
+
+			this.white = 0;
+			this.black = 0;
+		}
+
+		private void add(Cell cell) {
+			this.history.add(cell);
+			this.current = cell;
+		}
 	}
 
 	private static class Cell {
