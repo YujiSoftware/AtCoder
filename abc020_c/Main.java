@@ -3,8 +3,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
-import java.util.Queue;
 
 public class Main {
 
@@ -46,12 +46,12 @@ public class Main {
 		while (max - min > 1) {
 			int mid = min + ((max - min) / 2);
 
-			Queue<Status> queue = new ArrayDeque<>();
+			Deque<Status> queue = new ArrayDeque<>();
 			queue.add(new Status(new Cell(start.x, start.y)));
 
 			boolean success = false;
 			while (!queue.isEmpty()) {
-				Status status = queue.poll();
+				Status status = queue.removeFirst();
 
 				if (status.black > 0 && (T - status.white) / status.black < mid) {
 					continue;
@@ -68,7 +68,7 @@ public class Main {
 
 					if (!status.history.contains(next)) {
 						if (0 <= next.x && next.x < W && 0 <= next.y && next.y < H) {
-							queue.add(new Status(status, next, isWhite(map[next.y][next.x])));
+							queue.addFirst(new Status(status, next, isWhite(map[next.y][next.x])));
 						}
 					}
 				}
