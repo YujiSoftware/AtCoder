@@ -43,8 +43,19 @@ public class Main {
 		int max = T;
 		int min = 1;
 
+		int[][] shortest = new int[H][];
+		for (int y = 0; y < H; y++) {
+			shortest[y] = new int[W];
+		}
+
 		while (max - min > 1) {
 			int mid = min + ((max - min) / 2);
+
+			for (int y = 0; y < H; y++) {
+				for (int x = 0; x < W; x++) {
+					shortest[y][x] = Integer.MAX_VALUE;
+				}
+			}
 
 			Deque<Status> queue = new ArrayDeque<>();
 			queue.add(new Status(new Cell(start.x, start.y)));
@@ -52,10 +63,21 @@ public class Main {
 			boolean success = false;
 			while (!queue.isEmpty()) {
 				Status status = queue.removeFirst();
+				Cell current = status.current;
 
-				if (status.black > 0 && (T - status.white) / status.black < mid) {
+				// 経路オーバー
+				int score = status.white + (status.black * mid);
+				if (T < score) {
 					continue;
 				}
+
+				// 現在地点までの最短経路でなければ、以降は計算しない
+				if (shortest[current.y][current.x] < score) {
+					continue;
+				}
+
+				// 最短経路更新
+				shortest[current.y][current.x] = score;
 
 				if (status.history.contains(goal)) {
 					success = true;
@@ -63,7 +85,6 @@ public class Main {
 				}
 
 				for (int i = 0; i < cells.length; i++) {
-					Cell current = status.current;
 					Cell next = new Cell(current.x + cells[i].x, current.y + cells[i].y);
 
 					if (!status.history.contains(next)) {
