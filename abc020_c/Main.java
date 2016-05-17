@@ -79,7 +79,7 @@ public class Main {
 				// 最短経路更新
 				shortest[current.y][current.x] = score;
 
-				if (status.history.contains(goal)) {
+				if (status.getLast().equals(goal)) {
 					success = true;
 					break;
 				}
@@ -136,6 +136,10 @@ public class Main {
 		private void add(Cell cell) {
 			this.history.add(cell);
 			this.current = cell;
+		}
+
+		public Cell getLast() {
+			return history.get(history.size() - 1);
 		}
 	}
 
