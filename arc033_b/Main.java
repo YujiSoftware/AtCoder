@@ -9,22 +9,35 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         int NA = sc.nextInt();
         int NB = sc.nextInt();
-        ArrayList<Integer> A = new ArrayList<>(NA);
-        for (int i = 0; i < NA; i++) {
-            A.add(sc.nextInt());
+        int[] A = sc.nextInt(NA);
+        int[] B = sc.nextInt(NB);
+
+        Arrays.sort(A);
+        Arrays.sort(B);
+
+        int intersection = 0;
+        int union = 0;
+        int aPos = 0;
+        int bPos = 0;
+        while(aPos < A.length && bPos < B.length){
+            if(A[aPos] < B[bPos]){
+                union++;
+                aPos++;
+            }else if(A[aPos] > B[bPos]){
+                union++;
+                bPos++;
+            }else{
+                intersection++;
+                union++;
+                aPos++;
+                bPos++;
+            }
         }
-        ArrayList<Integer> B = new ArrayList<>(NB);
-        for (int i = 0; i < NB; i++) {
-            B.add(sc.nextInt());
-        }
 
-        Set<Integer> intersection = new HashSet<>(A);
-        intersection.retainAll(B);
+        union += A.length - aPos;
+        union += B.length - bPos;
 
-        Set<Integer> union = new HashSet<>(A);
-        union.addAll(B);
-
-        double jaccard = (double) intersection.size() / union.size();
+        double jaccard = (double) intersection / union;
 
         System.out.println(jaccard);
     }
