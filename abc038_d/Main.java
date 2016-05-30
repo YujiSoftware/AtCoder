@@ -1,14 +1,9 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.stream.IntStream;
 
 public class Main {
 
@@ -20,69 +15,21 @@ public class Main {
 			box[i] = new Pair(sc.nextInt(), sc.nextInt());
 		}
 
-		int height = getHeight(box);
-		System.err.println();
-		int width = getWidth(box);
+		Arrays.sort(box, Comparator.comparing(Pair::getWidth));
+		int[] score = new int[N];
 
-		System.out.println(Math.max(height, width));
-	}
-
-	private static int getHeight(Pair[] box) {
-		Map<Integer, List<Pair>> collect = Stream.of(box)
-			.collect(Collectors.groupingBy(b -> b.getWidth()));
-		List<Integer> keys = new ArrayList<>(collect.keySet());
-		Collections.sort(keys);
-
-		int length = 0;
-		int height = -1;
-		for (Integer key : keys) {
-			List<Pair> list = collect.get(key);
-			int limit = height;
-			length++;
-
-			Optional<Pair> pair = list.stream()
-				.filter(b -> b.height > limit)
-				.min(Comparator.comparing(b -> b.getHeight()));
-
-			System.err.println(pair);
-
-			if (pair.isPresent()) {
-				height = pair.get().height;
-			} else {
-				break;
+		for (int i = 0; i < box.length; i++) {
+			int maxScore = 1;
+			for (int j = 0; j < i; j++) {
+				if (box[j].getHeight() < box[i].getHeight()) {
+					maxScore = Math.max(maxScore, score[j] + 1);
+				}
 			}
+
+			score[i] = maxScore;
 		}
 
-		return length;
-	}
-
-	private static int getWidth(Pair[] box) {
-		Map<Integer, List<Pair>> collect = Stream.of(box)
-			.collect(Collectors.groupingBy(b -> b.getHeight()));
-		List<Integer> keys = new ArrayList<>(collect.keySet());
-		Collections.sort(keys);
-
-		int length = 0;
-		int width = -1;
-		for (Integer key : keys) {
-			List<Pair> list = collect.get(key);
-			int limit = width;
-
-			Optional<Pair> pair = list.stream()
-				.filter(b -> b.width > limit)
-				.min(Comparator.comparing(b -> b.getWidth()));
-
-			System.err.println(pair);
-
-			if (pair.isPresent()) {
-				length++;
-				width = pair.get().width;
-			} else {
-				break;
-			}
-		}
-
-		return length;
+		System.out.println(IntStream.of(score).max().getAsInt());
 	}
 
 	public static class Pair {
