@@ -21,6 +21,10 @@ public class Main {
 		for (int i = 0; i < box.length; i++) {
 			int maxScore = 1;
 			for (int j = 0; j < i; j++) {
+				if (box[i].getWidth() == box[j].getWidth()) {
+					break;
+				}
+
 				if (box[j].getHeight() < box[i].getHeight()) {
 					maxScore = Math.max(maxScore, score[j] + 1);
 				}
