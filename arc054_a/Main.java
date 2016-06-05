@@ -10,15 +10,19 @@ class Main {
 		int S = sc.nextInt();
 		int D = sc.nextInt();
 
+		double forward;
+		double backward;
 		if (S < D) {
-			double forward = (D - S) / (double) (X + Y);
-			double backward = (L - D + S) / (double) Math.abs(Y - X);
-
-			System.out.println(Math.min(forward, backward));
+			forward = (D - S) / (double) (X + Y);
+			backward = (L - D + S) / (double) (Y - X);
 		} else {
-			double forward = (L - S + D) / (double) (X + Y);
-			double backward = (S - D) / (double) Math.abs(Y - X);
+			forward = (L - S + D) / (double) (X + Y);
+			backward = (S - D) / (double) (Y - X);
+		}
 
+		if (backward < 0.0) {
+			System.out.println(forward);
+		} else {
 			System.out.println(Math.min(forward, backward));
 		}
 	}
