@@ -13,11 +13,11 @@ class Main {
 		double forward;
 		double backward;
 		if (S < D) {
-			forward = (D - S) / (double) (X + Y);
-			backward = (L - D + S) / (double) (Y - X);
+			forward = (D - S) / ((double) X + Y);
+			backward = (L - D + S) / ((double) Y - X);
 		} else {
-			forward = (L - S + D) / (double) (X + Y);
-			backward = (S - D) / (double) (Y - X);
+			forward = (L - S + D) / ((double) X + Y);
+			backward = (S - D) / ((double) Y - X);
 		}
 
 		if (backward < 0.0) {
