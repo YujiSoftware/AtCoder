@@ -40,6 +40,14 @@ public class MainTest {
 		assertIO(input, output);
 	}
 
+	@Test
+	public void 入力例MAX() throws Exception {
+		String input = "100000000 100000000 100000000 99999999 99999999";
+		double output = 0;
+
+		assertIO(input, output);
+	}
+
 	private void assertIO(String input, double output) throws Exception {
 		ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
 		System.setIn(in);
@@ -49,6 +57,6 @@ public class MainTest {
 
 		Main.main(new String[0]);
 
-		assertEquals(Double.parseDouble(out.toString()), output, 0.0000001);
+		assertEquals(output, Double.parseDouble(out.toString()), 0.0000001);
 	}
 }
