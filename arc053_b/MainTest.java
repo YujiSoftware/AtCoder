@@ -1,11 +1,11 @@
-import static org.hamcrest.CoreMatchers.is;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.hamcrest.CoreMatchers.is;
 
 public class MainTest {
 
@@ -37,6 +37,14 @@ public class MainTest {
 	public void 入力例4() throws Exception {
 		String input = "succeeded";
 		String output = "3";
+
+		assertIO(input, output);
+	}
+
+	@Test
+	public void 入力例5() throws Exception {
+		String input = "abcccba";
+		String output = "7";
 
 		assertIO(input, output);
 	}

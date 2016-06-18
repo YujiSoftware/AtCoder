@@ -13,28 +13,37 @@ public class Main {
 		String S = sc.next();
 
 		Map<Boolean, List<Long>> collect = S.chars().boxed()
-			.collect(Collectors.groupingBy(i -> i, Collectors.counting())).entrySet().stream()
-			.map(Map.Entry::getValue).collect(Collectors.partitioningBy(c -> c % 2 == 1));
+				.collect(Collectors.groupingBy(i -> i, Collectors.counting()))
+				.entrySet().stream()
+				.map(Map.Entry::getValue)
+				.collect(Collectors.partitioningBy(c -> c % 2 == 1));
 
 		List<Long> oddList = collect.get(true);
 		List<Long> evenList = collect.get(false);
 
-		Collections.sort(oddList);
-		Collections.sort(evenList, Collections.reverseOrder());
-
 		long min = Long.MAX_VALUE;
-		while (oddList.size() > 0 && evenList.size() > 0) {
-			long odd = oddList.remove(0);
-			long even = evenList.remove(0);
-			min = Math.min(min, odd + even);
-		}
+		if (oddList.size() == 0) {
+			// 偶数の長さのものをすべて結合したもの
+			// ex: aaaaaabbbbcc -> aaabbccbbaaa
+			min = evenList.stream().mapToLong(Long::longValue).sum();
+		} else if (oddList.size() > evenList.size()) {
+			// 数の少ない方から奇数と偶数とつなげて、余った奇数のうち最小のもの
+			// ex: succddeee ->  csc,dud,eee
+			Collections.sort(oddList);
+			min = oddList.get(evenList.size());
+		} else {
+			// 偶数をまとめて奇数と同じ個数にし、すべての組み合わせの中から最小のもの
+			// ex: aabbccc -> abba,ccc -> abcccba
+			while (oddList.size() < evenList.size()) {
+				Collections.sort(evenList);
+				evenList.add(evenList.remove(0) + evenList.remove(0));
+			}
 
-		if (!oddList.isEmpty()) {
-			min = Math.min(min, oddList.stream().mapToLong(odd -> odd).min().getAsLong());
-		}
-
-		if (!evenList.isEmpty()) {
-			min = Math.min(min, evenList.stream().mapToLong(even -> even).sum());
+			for (long i : oddList) {
+				for (long j : evenList) {
+					min = Math.min(min, i + j);
+				}
+			}
 		}
 
 		System.out.println(min);
