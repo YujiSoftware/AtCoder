@@ -27,10 +27,15 @@ public class Main {
 			// ex: aaaaaabbbbcc -> aaabbccbbaaa
 			min = evenList.stream().mapToLong(Long::longValue).sum();
 		} else if (oddList.size() > evenList.size()) {
-			// 数の少ない方から奇数と偶数とつなげて、余った奇数のうち最小のもの
+			// 奇数の数字の小さい方からと偶数の数字の大きい方からとつなげたものと、余った奇数のうち最小のもの
 			// ex: succddeee ->  csc,dud,eee
 			Collections.sort(oddList);
-			min = oddList.get(evenList.size());
+			Collections.sort(evenList, Collections.reverseOrder());
+			while (!evenList.isEmpty()) {
+				min = Math.min(min, oddList.remove(0) + evenList.remove(0));
+			}
+
+			min = Math.min(min, oddList.remove(0));
 		} else {
 			// 偶数をまとめて奇数と同じ個数にし、すべての組み合わせの中から最小のもの
 			// ex: aabbccc -> abba,ccc -> abcccba
