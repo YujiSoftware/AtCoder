@@ -51,6 +51,14 @@ public class MainTest {
 
 	@Test
 	public void 入力例6() throws Exception {
+		String input = "abccddddeeeffff";
+		String output = "5";
+
+		assertIO(input, output);
+	}
+
+	@Test
+	public void 入力例6() throws Exception {
 		String input = "abbccccc";
 		String output = "3";
 
