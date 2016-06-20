@@ -2,6 +2,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,28 +27,23 @@ public class Main {
 			// 偶数の長さのものをすべて結合したもの
 			// ex: aaaaaabbbbcc -> aaabbccbbaaa
 			min = evenList.stream().mapToLong(Long::longValue).sum();
-		} else if (oddList.size() > evenList.size()) {
-			// 奇数の数字の小さい方からと偶数の数字の大きい方からとつなげたものと、余った奇数のうち最小のもの
-			// ex: succddeee ->  csc,dud,eee
-			Collections.sort(oddList);
-			Collections.sort(evenList, Collections.reverseOrder());
-			while (!evenList.isEmpty()) {
-				min = Math.min(min, oddList.remove(0) + evenList.remove(0));
-			}
-
-			min = Math.min(min, oddList.remove(0));
 		} else {
-			// 偶数をまとめて奇数と同じ個数にし、すべての組み合わせの中から最小のもの
-			// ex: aabbccc -> abba,ccc -> abcccba
+			// 偶数文字の方が多ければ、短い偶数文字をまとめて奇数文字と同じ個数する
 			while (oddList.size() < evenList.size()) {
 				Collections.sort(evenList);
 				evenList.add(evenList.remove(0) + evenList.remove(0));
 			}
 
-			for (long i : oddList) {
-				for (long j : evenList) {
-					min = Math.min(min, i + j);
-				}
+			// 短い奇数文字と長い偶数文字を組み合わせて回分を作る
+			Collections.sort(oddList);
+			Collections.sort(evenList, Comparator.reverseOrder());
+			while (!evenList.isEmpty()) {
+				min = Math.min(min, oddList.remove(0) + evenList.remove(0));
+			}
+
+			// 奇数が余るようであれば、それは単独の回文として扱う
+			if(!oddList.isEmpty()){
+				min = Math.min(min, oddList.remove(0));
 			}
 		}
 
