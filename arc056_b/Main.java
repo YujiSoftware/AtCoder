@@ -1,12 +1,9 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Main {
 
@@ -37,45 +34,26 @@ public class Main {
 			}
 		}
 
-		boolean[] park = new boolean[N + 1];
-		Map<Integer, List<Integer>> cacheMap = new HashMap<>();
-		PARKING: for (int i = 1; i <= N; i++) {
-			if (park[S]) {
-				continue;
-			}
+		PARKING:
+		for(int i = 1; i <= N; i++){
+			Deque<String> stack = new ArrayDeque<>();
+			stack.push(S + ",");
+			while(!stack.isEmpty()){
+				String current = stack.pop();
 
-			List<Integer> cache = cacheMap.get(i);
-			if (cache != null && cache.stream().allMatch(s -> !park[s])) {
-				System.out.println(i);
-				park[i] = true;
-				continue;
-			}
+				String[] route = current.split(",");
+				int last = Integer.parseInt(route[route.length - 1]);
 
-			Deque<List<Integer>> stack = new ArrayDeque<>();
-			List<Integer> first = new ArrayList<>();
-			first.add(S);
-			stack.push(first);
-
-			while (!stack.isEmpty()) {
-				List<Integer> list = stack.pop();
-				Integer last = list.get(list.size() - 1);
-
-				if (last == i) {
+				if(last == i){
 					System.out.println(i);
-					park[i] = true;
 					continue PARKING;
+				}else if(last < i){
+					continue;
 				}
 
-				for (int next : pair.get(last)) {
-					if (!park[next] && !list.contains(next)) {
-						List<Integer> nextList = new ArrayList<>(list);
-						nextList.add(next);
-
-						cacheMap.put(next, nextList);
-
-						stack.push(nextList);
-					}
-				}
+				pair.get(last).stream()
+						.filter(next -> !current.contains(next + ","))
+						.forEach(next -> stack.push(current + next + ","));
 			}
 		}
 	}
