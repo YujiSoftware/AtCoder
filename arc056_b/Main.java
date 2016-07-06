@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class Main {
 
@@ -36,10 +35,11 @@ public class Main {
 
 		PARKING:
 		for(int i = 1; i <= N; i++){
-			Deque<String> stack = new ArrayDeque<>();
-			stack.push(S + ",");
-			while(!stack.isEmpty()){
-				String current = stack.pop();
+			PriorityQueue<String> queue = new PriorityQueue<>(Comparator.reverseOrder());
+			//Deque<String> stack = new ArrayDeque<>();
+			queue.add(S + ",");
+			while(!queue.isEmpty()){
+				String current = queue.poll();
 
 				String[] route = current.split(",");
 				int last = Integer.parseInt(route[route.length - 1]);
@@ -53,7 +53,7 @@ public class Main {
 
 				pair.get(last).stream()
 						.filter(next -> !current.contains(next + ","))
-						.forEach(next -> stack.push(current + next + ","));
+						.forEach(next -> queue.add(current + next + ","));
 			}
 		}
 	}
