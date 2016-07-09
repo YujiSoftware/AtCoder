@@ -1,8 +1,9 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
-import java.util.stream.IntStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
 
 public class Main {
 
@@ -10,51 +11,97 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
 		int M = sc.nextInt();
-		int S = sc.nextInt();
+		int S = sc.nextInt() - 1;
 		int[] u = new int[M];
 		int[] v = new int[M];
 		for (int i = 0; i < M; i++) {
-			u[i] = sc.nextInt();
-			v[i] = sc.nextInt();
+			u[i] = sc.nextInt() - 1;
+			v[i] = sc.nextInt() - 1;
 		}
 
-		Map<Integer, List<Integer>> pair = new HashMap<>();
+		List<List<Integer>> graph = new ArrayList<>(N);
+		for (int i = 0; i < N; i++) {
+			graph.add(new ArrayList<>());
+		}
+
 		for (int i = 0; i < M; i++) {
-			int[] left = new int[] { v[i], u[i] };
-			int[] right = new int[] { u[i], v[i] };
-			for (int j = 0; j < 2; j++) {
-				if (pair.containsKey(left[j])) {
-					pair.get(left[j]).add(right[j]);
-				} else {
-					List<Integer> list = new ArrayList<>();
-					list.add(right[j]);
-					pair.put(left[j], list);
-				}
+			graph.get(u[i]).add(v[i]);
+			graph.get(v[i]).add(u[i]);
+		}
+
+		boolean[] used = new boolean[N];
+		Integer[] cost = new Integer[N];
+		PriorityQueue<Park> queue = new PriorityQueue<>();
+
+		queue.add(new Park(S, S));
+
+		while (!queue.isEmpty()) {
+			Park current = queue.poll();
+
+			if (used[current.now]) {
+				continue;
+			}
+
+			used[current.now] = true;
+			cost[current.now] = current.min;
+
+			for (Integer node : graph.get(current.now)) {
+				Park next = new Park(Math.min(current.min, node), node);
+				queue.add(next);
 			}
 		}
 
-		PARKING:
-		for(int i = 1; i <= N; i++){
-			PriorityQueue<String> queue = new PriorityQueue<>(Comparator.reverseOrder());
-			//Deque<String> stack = new ArrayDeque<>();
-			queue.add(S + ",");
-			while(!queue.isEmpty()){
-				String current = queue.poll();
-
-				String[] route = current.split(",");
-				int last = Integer.parseInt(route[route.length - 1]);
-
-				if(last == i){
-					System.out.println(i);
-					continue PARKING;
-				}else if(last < i){
-					continue;
-				}
-
-				pair.get(last).stream()
-						.filter(next -> !current.contains(next + ","))
-						.forEach(next -> queue.add(current + next + ","));
+		for (int i = 0; i < N; i++) {
+			if (cost[i] >= i) {
+				System.out.println(i + 1);
 			}
+		}
+	}
+
+	private static class Park implements Comparable<Park> {
+		public Integer min;
+		public Integer now;
+
+		public Park(Integer min, Integer now) {
+			this.min = min;
+			this.now = now;
+		}
+
+		public Integer getMin() {
+			return min;
+		}
+
+		public Integer getNow() {
+			return now;
+		}
+
+		@Override
+		public int compareTo(Park other) {
+			return other.now - this.now;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			Park park = (Park) o;
+
+			if (min != park.min) return false;
+			return now == park.now;
+
+		}
+
+		@Override
+		public int hashCode() {
+			int result = min;
+			result = 31 * result + now;
+			return result;
+		}
+
+		@Override
+		public String toString() {
+			return "Park{min=" + min + ", now=" + now + '}';
 		}
 	}
 
