@@ -46,8 +46,10 @@ public class Main {
 			cost[current.now] = current.min;
 
 			for (Integer node : graph.get(current.now)) {
-				Park next = new Park(Math.min(current.min, node), node);
-				queue.add(next);
+				if (!used[node]) {
+					Park next = new Park(Math.min(current.min, node), node);
+					queue.add(next);
+				}
 			}
 		}
 
