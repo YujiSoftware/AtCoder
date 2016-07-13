@@ -62,9 +62,9 @@ public class Main {
 
 	private static class Park implements Comparable<Park> {
 		public Integer min;
-		public Integer now;
+		public int now;
 
-		public Park(Integer min, Integer now) {
+		public Park(Integer min, int now) {
 			this.min = min;
 			this.now = now;
 		}
@@ -73,7 +73,7 @@ public class Main {
 			return min;
 		}
 
-		public Integer getNow() {
+		public int getNow() {
 			return now;
 		}
 
