@@ -1,6 +1,7 @@
-import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -8,15 +9,17 @@ import java.util.PriorityQueue;
 public class Main {
 
 	public static void main(String[] args) throws Exception {
-		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		int M = sc.nextInt();
-		int S = sc.nextInt() - 1;
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		String[] NMS = reader.readLine().split(" ");
+		int N = Integer.parseInt(NMS[0]);
+		int M = Integer.parseInt(NMS[1]);
+		int S = Integer.parseInt(NMS[2]) - 1;
 		int[] u = new int[M];
 		int[] v = new int[M];
 		for (int i = 0; i < M; i++) {
-			u[i] = sc.nextInt() - 1;
-			v[i] = sc.nextInt() - 1;
+			String[] uv = reader.readLine().split(" ");
+			u[i] = Integer.parseInt(uv[0]) - 1;
+			v[i] = Integer.parseInt(uv[1]) - 1;
 		}
 
 		List<List<Integer>> graph = new ArrayList<>(N);
@@ -104,73 +107,6 @@ public class Main {
 		@Override
 		public String toString() {
 			return "Park{min=" + min + ", now=" + now + '}';
-		}
-	}
-
-	public static class Scanner {
-		private BufferedInputStream inputStream;
-
-		public Scanner(InputStream in) {
-			inputStream = new BufferedInputStream(in);
-		}
-
-		public int nextInt() throws IOException {
-			int num = 0;
-
-			int read = skip();
-			do {
-				num = num * 10 + (read - 0x30);
-			} while ((read = inputStream.read()) > 0x20);
-
-			return num;
-		}
-
-		public int[] nextInt(int n) throws IOException {
-			int[] array = new int[n];
-			for (int i = 0; i < n; i++) {
-				array[i] = nextInt();
-			}
-
-			return array;
-		}
-
-		public long nextLong() throws IOException {
-			long num = 0;
-
-			int read = skip();
-			do {
-				num = num * 10 + (read - 0x30);
-			} while ((read = inputStream.read()) > 0x20);
-
-			return num;
-		}
-
-		public long[] nextLong(int n) throws IOException {
-			long[] array = new long[n];
-			for (int i = 0; i < n; i++) {
-				array[i] = nextLong();
-			}
-
-			return array;
-		}
-
-		public String next() throws IOException {
-			StringBuilder builder = new StringBuilder();
-
-			int read = skip();
-			do {
-				builder.append((char) read);
-			} while ((read = inputStream.read()) > 0x20);
-
-			return builder.toString();
-		}
-
-		private int skip() throws IOException {
-			int read;
-			while ((read = inputStream.read()) <= 0x20)
-				;
-
-			return read;
 		}
 	}
 }
