@@ -1,6 +1,4 @@
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,11 +54,15 @@ public class Main {
 			}
 		}
 
+		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < N; i++) {
 			if (cost[i] >= i) {
-				System.out.println(i + 1);
+				builder.append(i + 1);
+				builder.append(System.lineSeparator());
 			}
 		}
+
+		System.out.print(builder.toString());
 	}
 
 	private static class Park implements Comparable<Park> {
