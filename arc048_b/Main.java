@@ -1,63 +1,106 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class Main {
-
-	private static final int MOD = 1000000007;
 
 	public static void main(String[] args) throws Exception {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		int[] R = new int[N];
-		int[] H = new int[N];
-		for (int i = 0; i < N; i++) {
-			R[i] = sc.nextInt();
-			H[i] = sc.nextInt();
+		Human[] humans = new Human[N];
+		for (int i = 0; i < humans.length; i++) {
+			humans[i] = new Human(i, sc.nextInt(), sc.nextInt());
 		}
 
-		int[] win = new int[N];
-		int[] lose = new int[N];
-		int[] even = new int[N];
+		Arrays.sort(humans);
 
-		for (int i = 0; i < N; i++) {
-			for (int j = i + 1; j < N; j++) {
-				if (R[i] > R[j]) {
-					win[i]++;
-					lose[j]++;
-				} else if (R[i] < R[j]) {
-					win[j]++;
-					lose[i]++;
-				} else {
-					if (H[i] == H[j]) {
-						even[i]++;
-						even[j]++;
-					} else {
-						if (H[i] == 1 && H[j] == 2
-								|| H[i] == 2 && H[j] == 3
-								|| H[i] == 3 && H[j] == 1) {
-							win[i]++;
-							lose[j]++;
-						} else {
-							win[j]++;
-							lose[i]++;
-						}
-					}
-				}
+		for (int i = 0; i < humans.length; i++) {
+			int index = i;
+			while (index < humans.length - 1 && humans[index].compareTo(humans[index + 1]) == 0) {
+				index++;
 			}
+
+			for (int j = i; j <= index; j++) {
+				humans[j].win = humans.length - index - 1;
+				humans[j].loose = i;
+				humans[j].even = index - i;
+			}
+
+			i = index;
 		}
 
-		StringBuilder builder = new StringBuilder();
-		for (int i = 0; i < N; i++) {
-			builder.append(win[i]);
+		Arrays.sort(humans, new Comparator<Human>() {
+			@Override
+			public int compare(Human o1, Human o2) {
+				return o1.index - o2.index;
+			}
+		});
+
+		StringBuilder builder = new StringBuilder(humans.length * 5);
+		for (Human human : humans) {
+			builder.append(human.win);
 			builder.append(' ');
-			builder.append(lose[i]);
+			builder.append(human.loose);
 			builder.append(' ');
-			builder.append(even[i]);
+			builder.append(human.even);
 			builder.append(System.lineSeparator());
 		}
 
-		System.out.print(builder.toString());
+		System.out.print(builder);
+	}
+
+	private static class Human implements Comparable<Human> {
+		public int index;
+		public int rate;
+		public int hand;
+
+		public int win;
+		public int loose;
+		public int even;
+
+		public Human(int index, int rate, int hand) {
+			this.index = index;
+			this.rate = rate;
+			this.hand = hand;
+		}
+
+		public int getRate() {
+			return rate;
+		}
+
+		public int getHand() {
+			return hand;
+		}
+
+		@Override
+		public int compareTo(Human other) {
+			if (this.rate == other.rate) {
+				if (this.hand == 1 && other.hand == 2
+						|| this.hand == 2 && other.hand == 3
+						|| this.hand == 3 && other.hand == 1) {
+					return -1;
+				} else if (this.hand == 1 && other.hand == 3
+						|| this.hand == 2 && other.hand == 1
+						|| this.hand == 3 && other.hand == 2) {
+					return 1;
+				} else {
+					return 0;
+				}
+			} else {
+				return other.rate - this.rate;
+			}
+		}
+
+		@Override
+		public String toString() {
+			return "Human{" +
+					"index=" + (index + 1) +
+					", hand=" + hand +
+					", rate=" + rate +
+					'}';
+		}
 	}
 
 	public static class Scanner {
@@ -78,21 +121,13 @@ public class Main {
 			return num;
 		}
 
-		public void fill(int[] a) throws IOException {
-			for (int i = 0; i < a.length; i++) {
-				a[i] = nextInt();
-			}
-		}
-
-		public void fill(int[] a, int[] b) throws IOException {
-			if (a.length != b.length) {
-				throw new IllegalArgumentException();
+		public int[] nextInt(int n) throws IOException {
+			int[] array = new int[n];
+			for (int i = 0; i < n; i++) {
+				array[i] = nextInt();
 			}
 
-			for (int i = 0; i < a.length; i++) {
-				a[i] = nextInt();
-				b[i] = nextInt();
-			}
+			return array;
 		}
 
 		public long nextLong() throws IOException {
@@ -104,23 +139,6 @@ public class Main {
 			} while ((read = inputStream.read()) > 0x20);
 
 			return num;
-		}
-
-		public void fill(long[] a) throws IOException {
-			for (int i = 0; i < a.length; i++) {
-				a[i] = nextLong();
-			}
-		}
-
-		public void fill(long[] a, long[] b) throws IOException {
-			if (a.length != b.length) {
-				throw new IllegalArgumentException();
-			}
-
-			for (int i = 0; i < a.length; i++) {
-				a[i] = nextLong();
-				b[i] = nextLong();
-			}
 		}
 
 		public long[] nextLong(int n) throws IOException {
