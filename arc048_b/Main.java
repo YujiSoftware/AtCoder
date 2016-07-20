@@ -14,21 +14,47 @@ public class Main {
 			humans[i] = new Human(i, sc.nextInt(), sc.nextInt());
 		}
 
-		Arrays.sort(humans);
+		Arrays.sort(humans, new Comparator<Human>() {
+			@Override
+			public int compare(Human o1, Human o2) {
+				return o2.rate - o1.rate;
+			}
+		});
 
+		int rate = humans[0].rate;
+		int[] hands = new int[3];
+		int start = 0;
 		for (int i = 0; i < humans.length; i++) {
-			int index = i;
-			while (index < humans.length - 1 && humans[index].compareTo(humans[index + 1]) == 0) {
-				index++;
+			if (rate != humans[i].rate || i == humans.length - 1) {
+				int win = humans.length - i - 1;
+				int loose = i;
+
+				for (int j = start; j < i; j++) {
+					switch (humans[j].hand) {
+						case 1:
+							humans[j].win = hands[1] + win;
+							humans[j].loose = hands[2] + loose;
+							humans[j].even = hands[0] - 1;
+							break;
+						case 2:
+							humans[j].win = hands[2] + win;
+							humans[j].loose = hands[0] + loose;
+							humans[j].even = hands[1] - 1;
+							break;
+						case 3:
+							humans[j].win = hands[0] + win;
+							humans[j].loose = hands[1] + loose;
+							humans[j].even = hands[2] - 1;
+							break;
+					}
+				}
+
+				rate = humans[i].rate;
+				hands = new int[3];
+				start = i;
 			}
 
-			for (int j = i; j <= index; j++) {
-				humans[j].win = humans.length - index - 1;
-				humans[j].loose = i;
-				humans[j].even = index - i;
-			}
-
-			i = index;
+			hands[humans[i].hand - 1]++;
 		}
 
 		Arrays.sort(humans, new Comparator<Human>() {
@@ -51,7 +77,7 @@ public class Main {
 		System.out.print(builder);
 	}
 
-	private static class Human implements Comparable<Human> {
+	private static class Human {
 		public int index;
 		public int rate;
 		public int hand;
@@ -64,33 +90,6 @@ public class Main {
 			this.index = index;
 			this.rate = rate;
 			this.hand = hand;
-		}
-
-		public int getRate() {
-			return rate;
-		}
-
-		public int getHand() {
-			return hand;
-		}
-
-		@Override
-		public int compareTo(Human other) {
-			if (this.rate == other.rate) {
-				if (this.hand == 1 && other.hand == 2
-						|| this.hand == 2 && other.hand == 3
-						|| this.hand == 3 && other.hand == 1) {
-					return -1;
-				} else if (this.hand == 1 && other.hand == 3
-						|| this.hand == 2 && other.hand == 1
-						|| this.hand == 3 && other.hand == 2) {
-					return 1;
-				} else {
-					return 0;
-				}
-			} else {
-				return other.rate - this.rate;
-			}
 		}
 
 		@Override
