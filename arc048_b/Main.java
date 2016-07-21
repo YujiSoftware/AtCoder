@@ -9,75 +9,60 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		Human[] humans = new Human[N];
-		for (int i = 0; i < humans.length; i++) {
-			humans[i] = new Human(i, sc.nextInt(), sc.nextInt());
+		Coder[] coders = new Coder[N];
+		for (int i = 0; i < coders.length; i++) {
+			coders[i] = new Coder(i, sc.nextInt(), sc.nextInt() - 1);
 		}
 
-		Arrays.sort(humans, new Comparator<Human>() {
+		Arrays.sort(coders, new Comparator<Coder>() {
 			@Override
-			public int compare(Human o1, Human o2) {
+			public int compare(Coder o1, Coder o2) {
 				return o2.rate - o1.rate;
 			}
 		});
 
-		int rate = humans[0].rate;
-		int[] hands = new int[3];
-		int start = 0;
-		for (int i = 0; i < humans.length; i++) {
-			if (rate != humans[i].rate || i == humans.length - 1) {
-				int win = humans.length - i - 1;
-				int loose = i;
-
-				for (int j = start; j < i; j++) {
-					switch (humans[j].hand) {
-						case 1:
-							humans[j].win = hands[1] + win;
-							humans[j].loose = hands[2] + loose;
-							humans[j].even = hands[0] - 1;
-							break;
-						case 2:
-							humans[j].win = hands[2] + win;
-							humans[j].loose = hands[0] + loose;
-							humans[j].even = hands[1] - 1;
-							break;
-						case 3:
-							humans[j].win = hands[0] + win;
-							humans[j].loose = hands[1] + loose;
-							humans[j].even = hands[2] - 1;
-							break;
-					}
-				}
-
-				rate = humans[i].rate;
-				hands = new int[3];
-				start = i;
+		int index = 0;
+		while (index < coders.length) {
+			int rate = coders[index].rate;
+			int[] hands = new int[3];
+			int start = index;
+			while (index < coders.length && rate == coders[index].rate) {
+				hands[coders[index].hand]++;
+				index++;
 			}
 
-			hands[humans[i].hand - 1]++;
+			int win = coders.length - index;
+			int loose = start;
+			for (int i = start; i < index; i++) {
+				int hand = coders[i].hand;
+
+				coders[i].even = hands[hand] - 1;
+				coders[i].win = hands[(hand + 1) % 3] + win;
+				coders[i].loose = hands[(hand + 2) % 3] + loose;
+			}
 		}
 
-		Arrays.sort(humans, new Comparator<Human>() {
+		Arrays.sort(coders, new Comparator<Coder>() {
 			@Override
-			public int compare(Human o1, Human o2) {
+			public int compare(Coder o1, Coder o2) {
 				return o1.index - o2.index;
 			}
 		});
 
-		StringBuilder builder = new StringBuilder(humans.length * 5);
-		for (Human human : humans) {
-			builder.append(human.win);
+		StringBuilder builder = new StringBuilder(coders.length * 5);
+		for (Coder coder : coders) {
+			builder.append(coder.win);
 			builder.append(' ');
-			builder.append(human.loose);
+			builder.append(coder.loose);
 			builder.append(' ');
-			builder.append(human.even);
+			builder.append(coder.even);
 			builder.append(System.lineSeparator());
 		}
 
 		System.out.print(builder);
 	}
 
-	private static class Human {
+	private static class Coder {
 		public int index;
 		public int rate;
 		public int hand;
@@ -86,7 +71,7 @@ public class Main {
 		public int loose;
 		public int even;
 
-		public Human(int index, int rate, int hand) {
+		public Coder(int index, int rate, int hand) {
 			this.index = index;
 			this.rate = rate;
 			this.hand = hand;
@@ -94,7 +79,7 @@ public class Main {
 
 		@Override
 		public String toString() {
-			return "Human{" +
+			return "Coder{" +
 					"index=" + (index + 1) +
 					", hand=" + hand +
 					", rate=" + rate +
