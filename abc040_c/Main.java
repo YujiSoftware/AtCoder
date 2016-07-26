@@ -9,20 +9,28 @@ public class Main {
 		int N = sc.nextInt();
 		int[] a = sc.nextInt(N);
 
-		int sum = 0;
-		int current = a[0];
-		for (int i = 1; i < N; i++) {
-			if (i < N - 1 && Math.abs(a[i + 1] - current) < Math.abs(a[i] - current)) {
-				sum += Math.abs(a[i + 1] - current);
-				current = a[2];
-				i++;
-			} else {
-				sum += Math.abs(a[i] - current);
-				current = a[1];
-			}
+		int sumA = 0;
+		for (int i = 0; i < N - 2; i += 2) {
+			sumA += Math.abs(a[i] - a[i + 2]);
+			System.err.println(sumA);
+		}
+		if (N % 2 == 0) {
+			sumA += Math.abs(a[N - 1] - a[N - 2]);
+			System.err.println(sumA);
+		}
+		System.err.println("---");
+
+		int sumB = Math.abs(a[0] - a[1]);
+		for (int i = 1; i < N - 2; i += 2) {
+			sumB += Math.abs(a[i] - a[i + 2]);
+			System.err.println(sumB);
+		}
+		if (N % 2 == 1) {
+			sumB += Math.abs(a[N - 1] - a[N - 2]);
+			System.err.println(sumB);
 		}
 
-		System.out.println(sum);
+		System.out.println(Math.min(sumA, sumB));
 	}
 
 	public static class Scanner {
