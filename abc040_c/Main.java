@@ -1,6 +1,8 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class Main {
 
@@ -9,28 +11,79 @@ public class Main {
 		int N = sc.nextInt();
 		int[] a = sc.nextInt(N);
 
-		int sumA = 0;
-		for (int i = 0; i < N - 2; i += 2) {
-			sumA += Math.abs(a[i] - a[i + 2]);
-			System.err.println(sumA);
-		}
-		if (N % 2 == 0) {
-			sumA += Math.abs(a[N - 1] - a[N - 2]);
-			System.err.println(sumA);
-		}
-		System.err.println("---");
+		Deque<Bar> queue = new ArrayDeque<>();
+		queue.add(new Bar(0, 0));
 
-		int sumB = Math.abs(a[0] - a[1]);
-		for (int i = 1; i < N - 2; i += 2) {
-			sumB += Math.abs(a[i] - a[i + 2]);
-			System.err.println(sumB);
-		}
-		if (N % 2 == 1) {
-			sumB += Math.abs(a[N - 1] - a[N - 2]);
-			System.err.println(sumB);
+		int min = Integer.MAX_VALUE;
+
+		while (!queue.isEmpty()) {
+			Bar bar = queue.poll();
+			if (bar.now == N - 1) {
+				if (bar.cost < min) {
+					min = bar.cost;
+				}
+				continue;
+			}
+
+			for (int i = 0; i < 2; i++) {
+				int next = bar.now + i + 1;
+				if (next >= N) {
+					break;
+				}
+
+				int cost = Math.abs(a[bar.now] - a[next]);
+				queue.add(new Bar(bar.cost + cost, next));
+			}
 		}
 
-		System.out.println(Math.min(sumA, sumB));
+		System.out.println(min);
+	}
+
+	private static class Bar implements Comparable<Bar> {
+		public int cost;
+		public int now;
+
+		public Bar(int cost, int now) {
+			this.cost = cost;
+			this.now = now;
+		}
+
+		public int getCost() {
+			return cost;
+		}
+
+		public int getNow() {
+			return now;
+		}
+
+		@Override
+		public int compareTo(Bar other) {
+			return this.now - other.now;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			Bar park = (Bar) o;
+
+			if (cost != park.cost) return false;
+			return now == park.now;
+
+		}
+
+		@Override
+		public int hashCode() {
+			int result = cost;
+			result = 31 * result + now;
+			return result;
+		}
+
+		@Override
+		public String toString() {
+			return "Bar{cost=" + cost + ", now=" + now + '}';
+		}
 	}
 
 	public static class Scanner {
