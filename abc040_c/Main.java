@@ -1,8 +1,7 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.PriorityQueue;
 
 public class Main {
 
@@ -11,19 +10,22 @@ public class Main {
 		int N = sc.nextInt();
 		int[] a = sc.nextInt(N);
 
-		Deque<Bar> queue = new ArrayDeque<>();
-		queue.add(new Bar(0, 0));
+		boolean[] used = new boolean[N];
 
-		int min = Integer.MAX_VALUE;
+		PriorityQueue<Bar> queue = new PriorityQueue<>(N);
+		queue.add(new Bar(0, 0));
 
 		while (!queue.isEmpty()) {
 			Bar bar = queue.poll();
 			if (bar.now == N - 1) {
-				if (bar.cost < min) {
-					min = bar.cost;
-				}
+				System.out.println(bar.cost);
+				return;
+			}
+
+			if (used[bar.now]) {
 				continue;
 			}
+			used[bar.now] = true;
 
 			for (int i = 0; i < 2; i++) {
 				int next = bar.now + i + 1;
@@ -36,7 +38,6 @@ public class Main {
 			}
 		}
 
-		System.out.println(min);
 	}
 
 	private static class Bar implements Comparable<Bar> {
@@ -58,7 +59,7 @@ public class Main {
 
 		@Override
 		public int compareTo(Bar other) {
-			return this.now - other.now;
+			return this.cost - other.cost;
 		}
 
 		@Override
