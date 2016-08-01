@@ -78,6 +78,18 @@ public class MainTest {
 		assertIO(input, output);
 	}
 
+	@Test
+	public void 入力例7() throws Exception {
+		String input = "4 20" + System.lineSeparator() +
+				"3 10 10 3";
+		String output = "Possible" + System.lineSeparator() +
+				"1" + System.lineSeparator() +
+				"3" + System.lineSeparator() +
+				"2";
+
+		assertIO(input, output);
+	}
+
 	private void assertIO(String input, String output) throws Exception {
 		ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
 		System.setIn(in);
