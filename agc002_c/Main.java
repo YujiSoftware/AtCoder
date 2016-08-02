@@ -31,17 +31,27 @@ public class Main {
 			}
 
 			boolean removeLeft = false;
+			boolean removeRight = false;
 			int count = 1;
-			if (a[left] == a[right]) {
+			if (a[left] < a[right]) {
+				removeLeft = true;
+			} else if (a[left] > a[right]) {
+				removeRight = true;
+			} else {
 				for (int i = 1; left + i < right - i; i++) {
 					if (a[left + i] < a[right - i]) {
 						removeLeft = true;
 						break;
+					} else if (a[left + i] > a[right - i]) {
+						removeRight = true;
+						break;
 					}
 					count++;
 				}
-			} else if (a[left] < a[right]) {
-				removeLeft = true;
+
+				if (!removeLeft && !removeRight) {
+					removeLeft = removeRight = true;
+				}
 			}
 
 			for (int i = 0; i < count; i++) {
@@ -50,7 +60,8 @@ public class Main {
 
 					sum -= a[left];
 					left++;
-				} else {
+				}
+				if (removeRight && left != right) {
 					list.add(right);
 
 					sum -= a[right];

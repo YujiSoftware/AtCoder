@@ -56,13 +56,12 @@ public class MainTest {
 
 	@Test
 	public void 入力例5() throws Exception {
-		String input = "5 20" + System.lineSeparator() +
-				"10 10 10 10 10";
+		String input = "4 20" + System.lineSeparator() +
+				"3 10 10 3";
 		String output = "Possible" + System.lineSeparator() +
-				"4" + System.lineSeparator() +
+				"1" + System.lineSeparator() +
 				"3" + System.lineSeparator() +
-				"2" + System.lineSeparator() +
-				"1";
+				"2";
 
 		assertIO(input, output);
 	}
@@ -72,19 +71,7 @@ public class MainTest {
 		String input = "3 20" + System.lineSeparator() +
 				"10 10 10";
 		String output = "Possible" + System.lineSeparator() +
-				"2" + System.lineSeparator() +
-				"1";
-
-		assertIO(input, output);
-	}
-
-	@Test
-	public void 入力例7() throws Exception {
-		String input = "4 20" + System.lineSeparator() +
-				"3 10 10 3";
-		String output = "Possible" + System.lineSeparator() +
 				"1" + System.lineSeparator() +
-				"3" + System.lineSeparator() +
 				"2";
 
 		assertIO(input, output);
