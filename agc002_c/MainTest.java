@@ -35,9 +35,9 @@ public class MainTest {
 				"10 20 30 40 50";
 		String output = "Possible" + System.lineSeparator() +
 				"1" + System.lineSeparator() +
-				"2" + System.lineSeparator() +
+				"4" + System.lineSeparator() +
 				"3" + System.lineSeparator() +
-				"4";
+				"2";
 
 		assertIO(input, output);
 	}
@@ -71,8 +71,8 @@ public class MainTest {
 		String input = "3 20" + System.lineSeparator() +
 				"10 10 10";
 		String output = "Possible" + System.lineSeparator() +
-				"1" + System.lineSeparator() +
-				"2";
+				"2" + System.lineSeparator() +
+				"1";
 
 		assertIO(input, output);
 	}

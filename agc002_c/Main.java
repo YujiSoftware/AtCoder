@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Main {
 
@@ -16,63 +15,31 @@ public class Main {
 			a[i] = sc.nextInt();
 		}
 
-		int left = 0;
-		int right = N - 1;
-		long sum = 0;
-		for (int i = 0; i < a.length; i++) {
-			sum += a[i];
+		boolean possible = false;
+		int index = -1;
+		for (int i = 0; i < N - 1; i++) {
+			int sum = a[i] + a[i + 1];
+			if (sum >= L) {
+				index = i;
+				possible = true;
+				break;
+			}
 		}
 
-		List<Integer> list = new ArrayList<>();
-		while (left < right) {
-			if (sum < L) {
-				System.out.println("Impossible");
-				return;
-			}
-
-			boolean removeLeft = false;
-			boolean removeRight = false;
-			int count = 1;
-			if (a[left] < a[right]) {
-				removeLeft = true;
-			} else if (a[left] > a[right]) {
-				removeRight = true;
-			} else {
-				for (int i = 1; left + i < right - i; i++) {
-					if (a[left + i] < a[right - i]) {
-						removeLeft = true;
-						break;
-					} else if (a[left + i] > a[right - i]) {
-						removeRight = true;
-						break;
-					}
-					count++;
-				}
-
-				if (!removeLeft && !removeRight) {
-					removeLeft = removeRight = true;
-				}
-			}
-
-			for (int i = 0; i < count; i++) {
-				if (removeLeft) {
-					list.add(left + 1);
-
-					sum -= a[left];
-					left++;
-				}
-				if (removeRight && left != right) {
-					list.add(right);
-
-					sum -= a[right];
-					right--;
-				}
-			}
+		if (!possible) {
+			System.out.println("Impossible");
+			return;
 		}
 
 		System.out.println("Possible");
-		System.out.println(
-				list.stream().map(i -> i.toString()).collect(Collectors.joining(System.lineSeparator())));
+		List<String> list = new ArrayList<>();
+		for (int i = 0; i < index; i++) {
+			list.add(Integer.toString(i + 1));
+		}
+		for (int i = 1; i < N - index; i++) {
+			list.add(Integer.toString(N - i));
+		}
+		System.out.println(String.join(System.lineSeparator(), list));
 	}
 
 	public static class Scanner {
