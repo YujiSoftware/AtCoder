@@ -20,6 +20,18 @@ public class Main {
             y[i] = sc.nextInt();
         }
 
+        int maxLength = T * V;
+
+        for (int i = 0; i < n; i++) {
+            double a = Math.sqrt(Math.pow(x[i] - txa, 2) + Math.pow(y[i] - tya, 2));
+            double b = Math.sqrt(Math.pow(txb - x[i], 2) + Math.pow(tyb - y[i], 2));
+            if (a + b <= maxLength) {
+                System.out.println("YES");
+                return;
+            }
+        }
+
+        System.out.println("NO");
     }
 
     public static class Scanner {
