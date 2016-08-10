@@ -33,13 +33,13 @@ public class Main {
         while (!queue.isEmpty()) {
             Trace trace = queue.poll();
             if (trace.isGoal()) {
-                System.err.println(trace.routed.toString());
+                // System.err.println(trace.routed.toString());
                 System.out.println(trace.length);
                 return;
             }
 
             for (Route next : map.get(trace.current)) {
-                if (!trace.routed.contains(next.index)) {
+                if (!trace.routed.contains(next.index) && !trace.towns.contains(next.to)) {
                     queue.add(new Trace(trace, next));
                 }
             }
@@ -50,11 +50,13 @@ public class Main {
 
     public static class Trace implements Comparable<Trace> {
         private Set<Integer> routed;
+        private Set<Integer> towns;
         private int length;
         private int current;
 
         public Trace() {
             this.routed = new HashSet<>();
+            this.towns = new HashSet<>();
             this.length = 0;
             this.current = 1;
         }
@@ -62,6 +64,9 @@ public class Main {
         public Trace(Trace trace, Route next) {
             this.routed = new HashSet<>(trace.routed);
             this.routed.add(next.index);
+
+            this.towns = new HashSet<>(trace.towns);
+            this.towns.add(next.to);
 
             this.length = trace.length + next.length;
             this.current = next.to;
