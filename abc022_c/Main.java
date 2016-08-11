@@ -49,23 +49,23 @@ public class Main {
     }
 
     public static class Trace implements Comparable<Trace> {
-        private Set<Integer> routed;
-        private Set<Integer> towns;
+        private List<Integer> routed;
+        private List<Integer> towns;
         private int length;
         private int current;
 
         public Trace() {
-            this.routed = new HashSet<>();
-            this.towns = new HashSet<>();
+            this.routed = new ArrayList<>();
+            this.towns = new ArrayList<>();
             this.length = 0;
             this.current = 1;
         }
 
         public Trace(Trace trace, Route next) {
-            this.routed = new HashSet<>(trace.routed);
+            this.routed = new ArrayList<>(trace.routed);
             this.routed.add(next.index);
 
-            this.towns = new HashSet<>(trace.towns);
+            this.towns = new ArrayList<>(trace.towns);
             this.towns.add(next.to);
 
             this.length = trace.length + next.length;
