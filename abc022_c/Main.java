@@ -20,8 +20,8 @@ public class Main {
             int l = sc.nextInt();
 
             int index = i * 2;
-            route[index] = new Route(i, u, v, l);
-            route[index + 1] = new Route(i, v, u, l);
+            route[index] = new Route(i, index, u, v, l);
+            route[index + 1] = new Route(i, index + 1, v, u, l);
         }
 
         Map<Integer, List<Route>> map =
@@ -29,6 +29,8 @@ public class Main {
 
         PriorityQueue<Trace> queue = new PriorityQueue<>();
         queue.add(new Trace());
+
+        boolean[] checked = new boolean[M * 2];
 
         while (!queue.isEmpty()) {
             Trace trace = queue.poll();
@@ -38,8 +40,15 @@ public class Main {
                 return;
             }
 
+            if (trace.prev != null) {
+                if(checked[trace.prev.unique]){
+                    continue;
+                }
+                checked[trace.prev.unique] = true;
+            }
+
             for (Route next : map.get(trace.current)) {
-                if (!trace.routed.contains(next.index) && !trace.towns.contains(next.to)) {
+                if (!trace.routed.contains(next.index)) {
                     queue.add(new Trace(trace, next));
                 }
             }
@@ -50,26 +59,24 @@ public class Main {
 
     public static class Trace implements Comparable<Trace> {
         private List<Integer> routed;
-        private List<Integer> towns;
         private int length;
         private int current;
+        private Route prev;
 
         public Trace() {
             this.routed = new ArrayList<>();
-            this.towns = new ArrayList<>();
             this.length = 0;
             this.current = 1;
+            this.prev = null;
         }
 
         public Trace(Trace trace, Route next) {
             this.routed = new ArrayList<>(trace.routed);
             this.routed.add(next.index);
 
-            this.towns = new ArrayList<>(trace.towns);
-            this.towns.add(next.to);
-
             this.length = trace.length + next.length;
             this.current = next.to;
+            this.prev = next;
         }
 
         public boolean isGoal() {
@@ -84,12 +91,14 @@ public class Main {
 
     private static class Route {
         private int index;
+        private int unique;
         private int from;
         private int to;
         private int length;
 
-        public Route(int index, int from, int to, int length) {
+        public Route(int index, int unique, int from, int to, int length) {
             this.index = index;
+            this.unique = unique;
             this.from = from;
             this.to = to;
             this.length = length;
