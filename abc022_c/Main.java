@@ -1,7 +1,10 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,7 +31,7 @@ public class Main {
                 Stream.of(route).collect(Collectors.groupingBy(Route::getFrom));
 
         PriorityQueue<Trace> queue = new PriorityQueue<>();
-        queue.add(new Trace());
+        queue.add(new Trace(M));
 
         boolean[] checked = new boolean[M * 2];
 
@@ -41,14 +44,14 @@ public class Main {
             }
 
             if (trace.prev != null) {
-                if(checked[trace.prev.unique]){
+                if (checked[trace.prev.unique]) {
                     continue;
                 }
                 checked[trace.prev.unique] = true;
             }
 
             for (Route next : map.get(trace.current)) {
-                if (!trace.routed.contains(next.index)) {
+                if (!trace.routed[next.index]) {
                     queue.add(new Trace(trace, next));
                 }
             }
@@ -58,21 +61,21 @@ public class Main {
     }
 
     public static class Trace implements Comparable<Trace> {
-        private List<Integer> routed;
+        private boolean[] routed;
         private int length;
         private int current;
         private Route prev;
 
-        public Trace() {
-            this.routed = new ArrayList<>();
+        public Trace(int M) {
+            this.routed = new boolean[M];
             this.length = 0;
             this.current = 1;
             this.prev = null;
         }
 
         public Trace(Trace trace, Route next) {
-            this.routed = new ArrayList<>(trace.routed);
-            this.routed.add(next.index);
+            this.routed = Arrays.copyOf(trace.routed, trace.routed.length);
+            this.routed[next.index] = true;
 
             this.length = trace.length + next.length;
             this.current = next.to;
@@ -80,7 +83,7 @@ public class Main {
         }
 
         public boolean isGoal() {
-            return this.current == 1 && !routed.isEmpty();
+            return this.current == 1 && this.length > 0;
         }
 
         @Override
