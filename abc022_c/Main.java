@@ -1,12 +1,11 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Main {
 
@@ -16,74 +15,84 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         int N = sc.nextInt();
         int M = sc.nextInt();
-        Route[] route = new Route[M * 2];
+        List<Route> route = new ArrayList<>();
+        List<Route> first = new ArrayList<>();
         for (int i = 0; i < M; i++) {
             int u = sc.nextInt();
             int v = sc.nextInt();
             int l = sc.nextInt();
 
-            int index = i * 2;
-            route[index] = new Route(i, index, u, v, l);
-            route[index + 1] = new Route(i, index + 1, v, u, l);
+            if (u == 1) {
+                first.add(new Route(i, u, v, l));
+            } else if (v == 1) {
+                first.add(new Route(i, v, u, l));
+            } else {
+                route.add(new Route(i, u, v, l));
+                route.add(new Route(i, v, u, l));
+            }
         }
 
         Map<Integer, List<Route>> map =
-                Stream.of(route).collect(Collectors.groupingBy(Route::getFrom));
+                route.stream().collect(Collectors.groupingBy(Route::getFrom));
 
-        PriorityQueue<Trace> queue = new PriorityQueue<>();
-        queue.add(new Trace(M));
+        int min = Integer.MAX_VALUE;
 
-        boolean[] checked = new boolean[M * 2];
+        for (int i = 0; i < first.size() - 1; i++) {
+            for (int j = i + 1; j < first.size(); j++) {
+                Route start = first.get(i);
+                Route goal = first.get(j);
 
-        while (!queue.isEmpty()) {
-            Trace trace = queue.poll();
-            if (trace.isGoal()) {
-                // System.err.println(trace.routed.toString());
-                System.out.println(trace.length);
-                return;
-            }
+                PriorityQueue<Trace> queue = new PriorityQueue<>();
+                queue.add(new Trace(start.to));
 
-            if (trace.prev != null) {
-                if (checked[trace.prev.unique]) {
-                    continue;
+                boolean[] checked = new boolean[N + 1];
+                int totalLength = Integer.MAX_VALUE;
+
+                while (!queue.isEmpty()) {
+                    Trace trace = queue.poll();
+                    if (trace.current == goal.to) {
+                        totalLength = trace.length + start.length + goal.length;
+                        break;
+                    }
+
+                    if (checked[trace.current]) {
+                        continue;
+                    }
+                    checked[trace.current] = true;
+
+                    List<Route> nextRoute = map.get(trace.current);
+                    if (nextRoute != null) {
+                        for (Route next : nextRoute) {
+                            queue.add(new Trace(trace, next));
+                        }
+                    }
                 }
-                checked[trace.prev.unique] = true;
-            }
 
-            for (Route next : map.get(trace.current)) {
-                if (!trace.routed[next.index]) {
-                    queue.add(new Trace(trace, next));
+                if (totalLength < min) {
+                    min = totalLength;
                 }
             }
         }
 
-        System.out.println(-1);
+        if (min == Integer.MAX_VALUE) {
+            System.out.println(-1);
+        } else {
+            System.out.println(min);
+        }
     }
 
     public static class Trace implements Comparable<Trace> {
-        private boolean[] routed;
         private int length;
         private int current;
-        private Route prev;
 
-        public Trace(int M) {
-            this.routed = new boolean[M];
+        public Trace(int start) {
             this.length = 0;
-            this.current = 1;
-            this.prev = null;
+            this.current = start;
         }
 
         public Trace(Trace trace, Route next) {
-            this.routed = Arrays.copyOf(trace.routed, trace.routed.length);
-            this.routed[next.index] = true;
-
             this.length = trace.length + next.length;
             this.current = next.to;
-            this.prev = next;
-        }
-
-        public boolean isGoal() {
-            return this.current == 1 && this.length > 0;
         }
 
         @Override
@@ -94,14 +103,12 @@ public class Main {
 
     private static class Route {
         private int index;
-        private int unique;
         private int from;
         private int to;
         private int length;
 
-        public Route(int index, int unique, int from, int to, int length) {
+        public Route(int index, int from, int to, int length) {
             this.index = index;
-            this.unique = unique;
             this.from = from;
             this.to = to;
             this.length = length;
