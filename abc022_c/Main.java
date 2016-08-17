@@ -1,10 +1,7 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -16,16 +13,16 @@ public class Main {
         int N = sc.nextInt();
         int M = sc.nextInt();
         List<Route> route = new ArrayList<>();
-        List<Route> first = new ArrayList<>();
+        List<Route> init = new ArrayList<>();
         for (int i = 0; i < M; i++) {
             int u = sc.nextInt();
             int v = sc.nextInt();
             int l = sc.nextInt();
 
             if (u == 1) {
-                first.add(new Route(i, u, v, l));
+                init.add(new Route(i, u, v, l));
             } else if (v == 1) {
-                first.add(new Route(i, v, u, l));
+                init.add(new Route(i, v, u, l));
             } else {
                 route.add(new Route(i, u, v, l));
                 route.add(new Route(i, v, u, l));
@@ -37,39 +34,39 @@ public class Main {
 
         int min = Integer.MAX_VALUE;
 
-        for (int i = 0; i < first.size() - 1; i++) {
-            for (int j = i + 1; j < first.size(); j++) {
-                Route start = first.get(i);
-                Route goal = first.get(j);
+        for (int i = 0; i < init.size() - 1; i++) {
+            Route start = init.get(i);
 
-                PriorityQueue<Trace> queue = new PriorityQueue<>();
-                queue.add(new Trace(start.to));
+            PriorityQueue<Trace> queue = new PriorityQueue<>();
+            queue.add(new Trace(start.to));
 
-                boolean[] checked = new boolean[N + 1];
-                int totalLength = Integer.MAX_VALUE;
+            int[] costs = new int[N];
+            Arrays.fill(costs, -1);
 
-                while (!queue.isEmpty()) {
-                    Trace trace = queue.poll();
-                    if (trace.current == goal.to) {
-                        totalLength = trace.length + start.length + goal.length;
-                        break;
-                    }
+            while (!queue.isEmpty()) {
+                Trace trace = queue.poll();
 
-                    if (checked[trace.current]) {
-                        continue;
-                    }
-                    checked[trace.current] = true;
+                if (costs[trace.current - 1] >= 0) {
+                    continue;
+                }
+                costs[trace.current - 1] = trace.length;
 
-                    List<Route> nextRoute = map.get(trace.current);
-                    if (nextRoute != null) {
-                        for (Route next : nextRoute) {
-                            queue.add(new Trace(trace, next));
-                        }
+                List<Route> nextRoute = map.get(trace.current);
+                if (nextRoute != null) {
+                    for (Route next : nextRoute) {
+                        queue.add(new Trace(trace, next));
                     }
                 }
+            }
 
-                if (totalLength < min) {
-                    min = totalLength;
+            for (Route goal : init) {
+                if (start.to == goal.to) {
+                    continue;
+                }
+
+                int cost = costs[goal.to - 1];
+                if (cost >= 0) {
+                    min = Math.min(min, cost + start.length + goal.length);
                 }
             }
         }
