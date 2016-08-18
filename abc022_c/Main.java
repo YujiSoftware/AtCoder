@@ -52,9 +52,11 @@ public class Main {
                 costs[trace.current - 1] = trace.length;
 
                 List<Route> nextRoute = map.get(trace.current);
-                if (nextRoute != null) {
+                if(nextRoute != null){
                     for (Route next : nextRoute) {
-                        queue.add(new Trace(trace, next));
+                        if (costs[next.to - 1] == -1) {
+                            queue.add(new Trace(trace, next));
+                        }
                     }
                 }
             }
