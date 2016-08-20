@@ -1,143 +1,58 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
 
 public class Main {
 
     private static final int MOD = 1_000_000_007;
+    private static final int INF = Integer.MAX_VALUE / 2;
 
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
         int N = sc.nextInt();
         int M = sc.nextInt();
-        List<Route> route = new ArrayList<>();
-        List<Route> init = new ArrayList<>();
+
+        int[] startToNextNode = new int[N];
+        Arrays.fill(startToNextNode, INF);
+
+        int[][] route = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            Arrays.fill(route[i], INF);
+            route[i][i] = 0;
+        }
+
         for (int i = 0; i < M; i++) {
-            int u = sc.nextInt();
-            int v = sc.nextInt();
+            int u = sc.nextInt() - 1;
+            int v = sc.nextInt() - 1;
             int l = sc.nextInt();
 
-            if (u == 1) {
-                init.add(new Route(i, u, v, l));
-            } else if (v == 1) {
-                init.add(new Route(i, v, u, l));
+            if (u == 0) {
+                startToNextNode[v] = l;
             } else {
-                route.add(new Route(i, u, v, l));
-                route.add(new Route(i, v, u, l));
+                route[u][v] = l;
+                route[v][u] = l;
             }
         }
 
-        Map<Integer, List<Route>> map =
-                route.stream().collect(Collectors.groupingBy(Route::getFrom));
-
-        int min = Integer.MAX_VALUE;
-
-        for (int i = 0; i < init.size() - 1; i++) {
-            Route start = init.get(i);
-
-            PriorityQueue<Trace> queue = new PriorityQueue<>();
-            queue.add(new Trace(start.to));
-
-            int[] costs = new int[N];
-            Arrays.fill(costs, -1);
-
-            while (!queue.isEmpty()) {
-                Trace trace = queue.poll();
-
-                if (costs[trace.current - 1] >= 0) {
-                    continue;
-                }
-                costs[trace.current - 1] = trace.length;
-
-                List<Route> nextRoute = map.get(trace.current);
-                if(nextRoute != null){
-                    for (Route next : nextRoute) {
-                        if (costs[next.to - 1] == -1) {
-                            queue.add(new Trace(trace, next));
-                        }
-                    }
-                }
-            }
-
-            for (Route goal : init) {
-                if (start.to == goal.to) {
-                    continue;
-                }
-
-                int cost = costs[goal.to - 1];
-                if (cost >= 0) {
-                    min = Math.min(min, cost + start.length + goal.length);
+        for (int i = 1; i < N; i++) {
+            for (int j = 1; j < N; j++) {
+                for (int k = 1; k < N; k++) {
+                    route[j][k] = Math.min(route[j][k], route[j][i] + route[i][k]);
                 }
             }
         }
 
-        if (min == Integer.MAX_VALUE) {
-            System.out.println(-1);
-        } else {
-            System.out.println(min);
-        }
-    }
-
-    public static class Trace implements Comparable<Trace> {
-        private int length;
-        private int current;
-
-        public Trace(int start) {
-            this.length = 0;
-            this.current = start;
+        int result = Integer.MAX_VALUE;
+        for (int i = 0; i < N - 1; i++) {
+            for (int j = i + 1; j < N; j++) {
+                if (startToNextNode[i] != INF && startToNextNode[j] != INF && route[i][j] != INF) {
+                    result = Math.min(result, startToNextNode[i] + startToNextNode[j] + route[i][j]);
+                }
+            }
         }
 
-        public Trace(Trace trace, Route next) {
-            this.length = trace.length + next.length;
-            this.current = next.to;
-        }
-
-        @Override
-        public int compareTo(Trace o) {
-            return this.length - o.length;
-        }
-    }
-
-    private static class Route {
-        private int index;
-        private int from;
-        private int to;
-        private int length;
-
-        public Route(int index, int from, int to, int length) {
-            this.index = index;
-            this.from = from;
-            this.to = to;
-            this.length = length;
-        }
-
-        public int getIndex() {
-            return index;
-        }
-
-        public int getFrom() {
-            return from;
-        }
-
-        public int getTo() {
-            return to;
-        }
-
-        public int getLength() {
-            return length;
-        }
-
-        @Override
-        public String toString() {
-            return "Route{" +
-                    "index=" + index +
-                    ", from=" + from +
-                    ", to=" + to +
-                    ", length=" + length +
-                    '}';
-        }
+        System.out.println(result == Integer.MAX_VALUE ? -1 : result);
     }
 
     public static class Scanner {
