@@ -11,32 +11,44 @@ public class MainTest {
 
 	@Test
 	public void 入力例_1() throws Exception {
-		String input = "2 3 1 1";
-		String output = "2";
+		String input = "needed";
+		String output = "1 3";
 
 		assertIO(input, output);
 	}
 
 	@Test
 	public void 入力例_2() throws Exception {
-		String input = "10 7 3 4";
-		String output = "3570";
+		String input = "atcoder";
+		String output = "-1 -1";
 
 		assertIO(input, output);
 	}
 
 	@Test
 	public void 入力例_3() throws Exception {
-		String input = "100000 100000 99999 99999";
-		String output = "1";
+		String input = "abcdefghijklmnopqrstuvwxyz";
+		String output = "-1 -1";
 
 		assertIO(input, output);
 	}
 
 	@Test
 	public void 入力例_4() throws Exception {
-		String input = "100000 100000 44444 55555";
-		String output = "738162020";
+		String input = "zz";
+		String output = "1 2";
+
+		assertIO(input, output);
+	}
+
+	@Test
+	public void 入力例_5() throws Exception {
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < 400; i++) {
+			builder.append("abcdefghijklmnopqrstuvwxyz");
+		}
+		String input = builder.toString();
+		String output = "-1 -1";
 
 		assertIO(input, output);
 	}
