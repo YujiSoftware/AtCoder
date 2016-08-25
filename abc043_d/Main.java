@@ -11,11 +11,14 @@ public class Main {
 		for (int i = 0; i < s.length - 1; i++) {
 			for (int j = i + 1; j < s.length; j++) {
 				int[] counter = new int['z' - 'a' + 1];
-				int max = Integer.MIN_VALUE;
 				for (int k = i; k <= j; k++) {
-					int count = ++counter[s[k] - 'a'];
-					if (max < count) {
-						max = count;
+					counter[s[k] - 'a']++;
+				}
+
+				int max = Integer.MIN_VALUE;
+				for (int c : counter) {
+					if (max < c) {
+						max = c;
 					}
 				}
 
