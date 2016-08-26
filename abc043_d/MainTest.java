@@ -12,7 +12,7 @@ public class MainTest {
 	@Test
 	public void 入力例_1() throws Exception {
 		String input = "needed";
-		String output = "1 3";
+		String output = "2 3";
 
 		assertIO(input, output);
 	}
