@@ -17,7 +17,7 @@ public class Main {
             X[i] = new Coder(i + 1, sc.nextInt());
         }
 
-        List<Coder> list = new LinkedList<>();
+        List<Coder> list = new ArrayList<>();
         for (int i = 0; i < K; i++) {
             list.add(X[i]);
         }
@@ -28,18 +28,25 @@ public class Main {
             }
         });
 
+        StringBuilder builder = new StringBuilder();
         Coder current = list.get(K - 1);
-        System.out.println(current.index);
+        builder.append(current.index);
+        builder.append(System.lineSeparator());
+
         for (int i = K; i < N; i++) {
-            for (int j = 0; j < list.size(); j++) {
+            int limit = Math.min(K, list.size());
+            for (int j = 0; j < limit; j++) {
                 if (X[i].age < list.get(j).age) {
                     list.add(j, X[i]);
                     break;
                 }
             }
 
-            System.out.println(list.get(K - 1).index);
+            builder.append(list.get(K - 1).index);
+            builder.append(System.lineSeparator());
         }
+
+        System.out.print(builder.toString());
     }
 
     private static class Coder {

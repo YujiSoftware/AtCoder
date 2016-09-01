@@ -4,6 +4,8 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -32,6 +34,25 @@ public class MainTest {
                 "1" + System.lineSeparator() +
                         "1" + System.lineSeparator() +
                         "3";
+
+        assertIO(input, output);
+    }
+
+    @Test
+    public void 入力例3() throws Exception {
+        int N = 100000;
+        int K = 1;
+        String input =
+                N + " " + K + System.lineSeparator() +
+                        IntStream.rangeClosed(1, N)
+                                .map(i -> N + 1 - i)
+                                .mapToObj(Integer::toString)
+                                .collect(Collectors.joining(" "));
+        String output =
+                IntStream.rangeClosed(1, N - K + 1)
+                        .map(i -> i)
+                        .mapToObj(Integer::toString)
+                        .collect(Collectors.joining(System.lineSeparator()));
 
         assertIO(input, output);
     }
