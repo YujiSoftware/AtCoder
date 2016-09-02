@@ -1,7 +1,10 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class Main {
 
@@ -38,6 +41,7 @@ public class Main {
             for (int j = 0; j < limit; j++) {
                 if (X[i].age < list.get(j).age) {
                     list.add(j, X[i]);
+                    list.remove(list.size() - 1);
                     break;
                 }
             }
