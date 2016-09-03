@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -41,7 +42,7 @@ public class MainTest {
     @Test
     public void 入力例3() throws Exception {
         int N = 100000;
-        int K = 1;
+        int K = N / 2;
         String input =
                 N + " " + K + System.lineSeparator() +
                         IntStream.rangeClosed(1, N)
@@ -52,6 +53,24 @@ public class MainTest {
                 IntStream.rangeClosed(1, N - K + 1)
                         .map(i -> i)
                         .mapToObj(Integer::toString)
+                        .collect(Collectors.joining(System.lineSeparator()));
+
+        assertIO(input, output);
+    }
+
+    @Test
+    public void 入力例4() throws Exception {
+        int N = 100000;
+        int K = N / 2;
+        String input =
+                N + " " + K + System.lineSeparator() +
+                        IntStream.rangeClosed(1, N)
+                                .map(i -> i)
+                                .mapToObj(Integer::toString)
+                                .collect(Collectors.joining(" "));
+        String output =
+                Stream.generate(() -> "50000")
+                        .limit(N - K + 1)
                         .collect(Collectors.joining(System.lineSeparator()));
 
         assertIO(input, output);

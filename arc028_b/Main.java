@@ -38,11 +38,13 @@ public class Main {
 
         for (int i = K; i < N; i++) {
             int limit = Math.min(K, list.size());
-            for (int j = 0; j < limit; j++) {
-                if (X[i].age < list.get(j).age) {
-                    list.add(j, X[i]);
-                    list.remove(list.size() - 1);
-                    break;
+            if (X[i].age < list.get(list.size() - 1).age) {
+                for (int j = 0; j < limit; j++) {
+                    if (X[i].age < list.get(j).age) {
+                        list.add(j, X[i]);
+                        list.remove(list.size() - 1);
+                        break;
+                    }
                 }
             }
 
