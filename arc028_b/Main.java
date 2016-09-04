@@ -37,15 +37,27 @@ public class Main {
         builder.append(System.lineSeparator());
 
         for (int i = K; i < N; i++) {
-            int limit = Math.min(K, list.size());
-            if (X[i].age < list.get(list.size() - 1).age) {
-                for (int j = 0; j < limit; j++) {
-                    if (X[i].age < list.get(j).age) {
-                        list.add(j, X[i]);
-                        list.remove(list.size() - 1);
-                        break;
-                    }
+            int left = 0;
+            int right = list.size() - 1;
+            while (right - left > 1) {
+                int center = left + (right - left) / 2;
+                if (list.get(center).age < X[i].age) {
+                    left = center;
+                } else {
+                    right = center;
                 }
+            }
+
+            int index = -1;
+            if (X[i].age <= list.get(left).age) {
+                index = left;
+            } else if (X[i].age <= list.get(right).age) {
+                index = right;
+            }
+
+            if (index != -1) {
+                list.add(index, X[i]);
+                list.remove(list.size() - 1);
             }
 
             builder.append(list.get(K - 1).index);
@@ -62,6 +74,14 @@ public class Main {
         public Coder(int index, int age) {
             this.index = index;
             this.age = age;
+        }
+
+        @Override
+        public String toString() {
+            return "Coder{" +
+                    "index=" + index +
+                    ", age=" + age +
+                    '}';
         }
     }
 
