@@ -1,10 +1,7 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class Main {
 
@@ -20,60 +17,38 @@ public class Main {
             X[i] = new Coder(i + 1, sc.nextInt());
         }
 
-        List<Coder> list = new ArrayList<>();
+        TreeSet<Coder> set = new TreeSet<>();
         for (int i = 0; i < K; i++) {
-            list.add(X[i]);
+            set.add(X[i]);
         }
-        Collections.sort(list, new Comparator<Coder>() {
-            @Override
-            public int compare(Coder o1, Coder o2) {
-                return o1.age - o2.age;
-            }
-        });
 
         StringBuilder builder = new StringBuilder();
-        Coder current = list.get(K - 1);
-        builder.append(current.index);
+        builder.append(set.last().index);
         builder.append(System.lineSeparator());
 
-        for (int i = K; i < N; i++) {
-            int left = 0;
-            int right = list.size() - 1;
-            while (right - left > 1) {
-                int center = left + (right - left) / 2;
-                if (list.get(center).age < X[i].age) {
-                    left = center;
-                } else {
-                    right = center;
-                }
-            }
+        for(int i = K; i<N;i++){
+            set.add(X[i]);
+            set.pollLast();
 
-            int index = -1;
-            if (X[i].age <= list.get(left).age) {
-                index = left;
-            } else if (X[i].age <= list.get(right).age) {
-                index = right;
-            }
-
-            if (index != -1) {
-                list.add(index, X[i]);
-                list.remove(list.size() - 1);
-            }
-
-            builder.append(list.get(K - 1).index);
+            builder.append(set.last().index);
             builder.append(System.lineSeparator());
         }
 
         System.out.print(builder.toString());
     }
 
-    private static class Coder {
+    private static class Coder implements Comparable<Coder> {
         private final int index;
         private final int age;
 
         public Coder(int index, int age) {
             this.index = index;
             this.age = age;
+        }
+
+        @Override
+        public int compareTo(Coder o) {
+            return this.age - o.age;
         }
 
         @Override
