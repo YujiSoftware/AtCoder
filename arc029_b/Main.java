@@ -22,12 +22,12 @@ public class Main {
         double slope = Math.sqrt(Math.pow(A, 2) / 2.0) + Math.sqrt(Math.pow(B, 2) / 2.0);
 
         for (int i = 0; i < N; i++) {
-            if (A < C[i] && B < D[i]) {
+            if (A <= C[i] && B <= D[i]) {
                 System.out.println("YES");
-            } else if (A < D[i] && B < C[i]) {
+            } else if (A <= D[i] && B <= C[i]) {
                 System.out.println("YES");
             } else {
-                if (slope < C[i] && slope < D[i]) {
+                if (slope <= C[i] && slope <= D[i]) {
                     System.out.println("YES");
                 } else {
                     System.out.println("NO");

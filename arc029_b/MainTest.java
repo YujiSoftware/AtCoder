@@ -1,11 +1,11 @@
-import static org.hamcrest.CoreMatchers.is;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.hamcrest.CoreMatchers.is;
 
 public class MainTest {
 
@@ -20,6 +20,20 @@ public class MainTest {
         String output =
                 "YES" + System.lineSeparator() +
                         "NO" + System.lineSeparator() +
+                        "YES";
+
+        assertIO(input, output);
+    }
+
+    @Test
+    public void 入力例2() throws Exception {
+        String input =
+                "2 8" + System.lineSeparator() +
+                        "2" + System.lineSeparator() +
+                        "2 8" + System.lineSeparator() +
+                        "8 2";
+        String output =
+                "YES" + System.lineSeparator() +
                         "YES";
 
         assertIO(input, output);
