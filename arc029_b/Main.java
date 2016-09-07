@@ -12,11 +12,11 @@ public class Main {
         int A = sc.nextInt();
         int B = sc.nextInt();
         int N = sc.nextInt();
-        int[] C = new int[N];
-        int[] D = new int[N];
+        double[] C = new double[N];
+        double[] D = new double[N];
         for (int i = 0; i < N; i++) {
-            C[i] = sc.nextInt();
-            D[i] = sc.nextInt();
+            C[i] = sc.nextInt() + 0.01;
+            D[i] = sc.nextInt() + 0.01;
         }
 
         double slope = Math.sqrt(Math.pow(A, 2) / 2.0) + Math.sqrt(Math.pow(B, 2) / 2.0);
