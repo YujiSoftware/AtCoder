@@ -1,8 +1,8 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.LongStream;
 
 public class Main {
@@ -12,28 +12,35 @@ public class Main {
 		int H = sc.nextInt();
 		int W = sc.nextInt();
 		int N = sc.nextInt();
-		Box[] boxes = new Box[N];
+		Set<Box> fills = new HashSet<>();
 		for (int i = 0; i < N; i++) {
-			boxes[i] = new Box(sc.nextInt() - 1, sc.nextInt() - 1);
+			fills.add(new Box(sc.nextInt() - 1, sc.nextInt() - 1));
 		}
 
-		Arrays.sort(boxes, Comparator.comparingInt(Box::getY).thenComparing(Box::getX));
-
-		long[] group = new long[10];
-		for (int i = 0; i < boxes.length; i++) {
-			Box box = boxes[i];
-
-			int sum = 1;
-			for (int j = i + 1; j < boxes.length; j++) {
-				if (boxes[j].y > box.y + 2) {
-					break;
-				}
-				if (boxes[j].x >= box.x && boxes[j].x <= box.x + 2) {
-					sum++;
+		Set<Box> boards = new HashSet<Box>();
+		for (Box box : fills) {
+			for (int y = -2; y <= 0; y++) {
+				for (int x = -2; x <= 0; x++) {
+					int yy = box.y + y;
+					int xx = box.x + x;
+					if ((yy >= 0 && xx >= 0) && (yy < H - 2 && xx < W - 2)) {
+						boards.add(new Box(yy, xx));
+					}
 				}
 			}
+		}
 
-			group[sum]++;
+		long[] group = new long[10];
+		for (Box box : boards) {
+			int count = 0;
+			for (int y = box.y; y <= box.y + 2; y++) {
+				for (int x = box.x; x <= box.x + 2; x++) {
+					if (fills.contains(new Box(y, x))) {
+						count++;
+					}
+				}
+			}
+			group[count]++;
 		}
 
 		long zero = ((long) (H - 2) * (W - 2)) - LongStream.of(group).sum();
@@ -59,6 +66,31 @@ public class Main {
 
 		public int getX() {
 			return x;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + x;
+			result = prime * result + y;
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Box other = (Box) obj;
+			if (x != other.x)
+				return false;
+			if (y != other.y)
+				return false;
+			return true;
 		}
 
 		@Override
