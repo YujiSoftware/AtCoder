@@ -13,11 +13,15 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
-        long N = sc.nextInt();
+        long N = sc.nextLong();
         long sum = 0;
-        for(int i = 1; i <= N / 2; i++){
+        for(long i = N / 2; i > 0; i--){
             if(N % i == 0){
                 sum += i;
+            }
+
+            if(sum > N) {
+                break;
             }
         }
 
