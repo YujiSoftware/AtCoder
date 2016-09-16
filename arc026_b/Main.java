@@ -1,10 +1,10 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 public class Main {
 
@@ -14,22 +14,20 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
         long N = sc.nextLong();
-        long sum = 0;
-        for(long i = N / 2; i > 0; i--){
-            if(N % i == 0){
+        long sum = 1;
+        long limit = (long) Math.ceil(Math.sqrt(N));
+        for (long i = 2; i <= limit; i++) {
+            if (N % i == 0) {
                 sum += i;
-            }
-
-            if(sum > N) {
-                break;
+                sum += N / i;
             }
         }
 
-        if(sum > N){
+        if (sum > N) {
             System.out.println("Abundant");
-        }else if(sum < N){
+        } else if (sum < N) {
             System.out.println("Deficient");
-        }else{
+        } else {
             System.out.println("Perfect");
         }
     }

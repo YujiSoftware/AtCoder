@@ -1,11 +1,14 @@
-import static org.hamcrest.CoreMatchers.is;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.hamcrest.CoreMatchers.is;
 
 public class MainTest {
 
@@ -47,6 +50,46 @@ public class MainTest {
                 "Abundant";
 
         assertIO(input, output);
+    }
+
+    @Test
+    public void 入力例5() throws Exception {
+        String input =
+                "196";
+        String output =
+                "Abundant";
+
+        assertIO(input, output);
+    }
+
+    @Test
+    public void 入力例() throws Exception {
+        for (int N = 0; N < 10000; N++) {
+            String input =
+                    Integer.toString(N);
+
+            long sum = 1;
+            List<Long> list = new ArrayList<>();
+            for (long i = 2; i <= N / 2; i++) {
+                if (N % i == 0) {
+                    sum += i;
+                    list.add(i);
+                }
+            }
+
+            String output;
+            if(sum > N){
+                output = "Abundant";
+            }else if(sum < N){
+                output = "Deficient";
+            }else{
+                output = "Perfect";
+            }
+
+            System.err.println(N);
+            System.err.println(Arrays.toString(list.toArray()));
+            assertIO(input, output);
+        }
     }
 
     private void assertIO(String input, String output) throws Exception {
