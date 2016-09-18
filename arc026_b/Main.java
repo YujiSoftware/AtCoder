@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
         long N = sc.nextLong();
-        long sum = 1;
+        long sum = (N == 1) ? 0 : 1;
         long limit = (long) Math.floor(Math.sqrt(N));
         // List<Long> list = new ArrayList<>();
         for (long i = 2; i <= limit; i++) {

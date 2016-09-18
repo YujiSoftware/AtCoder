@@ -64,16 +64,20 @@ public class MainTest {
 
     @Test
     public void 入力例() throws Exception {
-        for (int N = 0; N < 10000; N++) {
+        for (long N = 1; N < 10000; N++) {
             String input =
-                    Integer.toString(N);
+                    Long.toString(N);
 
-            long sum = 1;
+            long sum = 0;
             List<Long> list = new ArrayList<>();
-            for (long i = 2; i <= N / 2; i++) {
-                if (N % i == 0) {
+            for(long i = N / 2; i > 0; i--){
+                if(N % i == 0){
                     sum += i;
                     list.add(i);
+                }
+
+                if(sum > N) {
+                    break;
                 }
             }
 
