@@ -1,10 +1,6 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 
 public class Main {
 
@@ -15,13 +11,21 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         long N = sc.nextLong();
         long sum = 1;
-        long limit = (long) Math.ceil(Math.sqrt(N));
+        long limit = (long) Math.floor(Math.sqrt(N));
+        // List<Long> list = new ArrayList<>();
         for (long i = 2; i <= limit; i++) {
             if (N % i == 0) {
                 sum += i;
-                sum += N / i;
+                // list.add(i);
+
+                if (i != N / i) {
+                    sum += N / i;
+                    // list.add(N / i);
+                }
             }
         }
+
+        // System.err.println(Arrays.toString(list.toArray()));
 
         if (sum > N) {
             System.out.println("Abundant");
