@@ -16,11 +16,11 @@ public class Main {
 
 		for (int i = 0; i < N - K; i++) {
 			Set<Character> set = new HashSet<>();
-			for (int j = i; j < K; j++) {
+			for (int j = i; j < i + K; j++) {
 				set.add(S[j]);
 			}
 
-			for (int j = K; j < N - K; j++) {
+			for (int j = i + K; j < N - K; j++) {
 				Set<Character> copy = new HashSet<>(set);
 				for (int k = j; k < j + K; k++) {
 					if (!copy.contains(S[k])) {
