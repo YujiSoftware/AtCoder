@@ -23,11 +23,9 @@ public class Main {
 			for (int j = i + K; j < N - K; j++) {
 				Set<Character> copy = new HashSet<>(set);
 				for (int k = j; k < j + K; k++) {
-					if (!copy.contains(S[k])) {
+					if (!copy.remove(S[k])) {
 						break;
 					}
-
-					copy.remove(S[k]);
 				}
 
 				if (copy.isEmpty()) {
