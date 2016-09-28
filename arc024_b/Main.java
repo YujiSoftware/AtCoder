@@ -1,6 +1,9 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Main {
 
@@ -14,6 +17,8 @@ public class Main {
         for (int i = 0; i < N; i++) {
             color[i] = Color.valueOf(sc.nextInt());
         }
+
+        Set<Colors> already = new HashSet<>();
 
         int day = 0;
         while (true) {
@@ -34,7 +39,7 @@ public class Main {
                 break;
             }
 
-            if(day > 1000000){
+            if(!already.add(new Colors(next)) || day > 10000){
                 day = -1;
                 break;
             }
@@ -43,6 +48,31 @@ public class Main {
         }
 
         System.out.println(day);
+    }
+
+    private static class Colors{
+        private final Color[] colors;
+        private final int hashCode;
+
+        public Colors(Color[] colors) {
+            this.colors = colors;
+            this.hashCode = Arrays.hashCode(colors);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Colors other = (Colors) o;
+
+            return Arrays.equals(this.colors, other.colors);
+        }
+
+        @Override
+        public int hashCode() {
+            return hashCode;
+        }
     }
 
     public enum Color {
