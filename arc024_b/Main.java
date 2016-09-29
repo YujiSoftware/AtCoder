@@ -26,20 +26,24 @@ public class Main {
 
             Color[] next = new Color[N];
             boolean updated = false;
+            boolean prev = color[N - 1] == color[0];
             for (int i = 0; i < N; i++) {
-                if (color[(i + N - 1) % N] == color[i] && color[i] == color[(i + 1) % N]) {
+                boolean current = color[i] == color[(i + 1) % N];
+                if (prev && current) {
                     next[i] = color[i].reverse();
                     updated = true;
                 } else {
                     next[i] = color[i];
                 }
+
+                prev = current;
             }
 
             if (!updated) {
                 break;
             }
 
-            if(!already.add(new Colors(next)) || day > 10000){
+            if (!already.add(new Colors(next)) || day > 10000) {
                 day = -1;
                 break;
             }
@@ -50,7 +54,7 @@ public class Main {
         System.out.println(day);
     }
 
-    private static class Colors{
+    private static class Colors {
         private final Color[] colors;
         private final int hashCode;
 
