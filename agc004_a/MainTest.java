@@ -41,6 +41,14 @@ public class MainTest {
 		assertIO(input, output);
 	}
 
+	@Test
+	public void 入力例_5() throws Exception {
+		String input = "99999999 99999999 99999999";
+		String output = Long.toString(99999999L * 99999999L);
+
+		assertIO(input, output);
+	}
+
 	private void assertIO(String input, String output) throws Exception {
 		ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
 		System.setIn(in);
