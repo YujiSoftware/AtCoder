@@ -19,8 +19,9 @@ public class Main {
 		int t = T[0];
 		int a = A[0];
 		for (int i = 1; i < N; i++) {
-			int nextT = T[i];
-			int nextA = A[i];
+			int factor = Math.max(t / T[i], a / A[i]);
+			int nextT = T[i] * factor;
+			int nextA = A[i] * factor;
 			while (nextT < t || nextA < a) {
 				nextT += T[i];
 				nextA += A[i];
