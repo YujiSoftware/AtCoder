@@ -16,12 +16,12 @@ public class Main {
 			A[i] = sc.nextInt();
 		}
 
-		int t = T[0];
-		int a = A[0];
+		long t = T[0];
+		long a = A[0];
 		for (int i = 1; i < N; i++) {
-			int factor = Math.max(t / T[i], a / A[i]);
-			int nextT = T[i] * factor;
-			int nextA = A[i] * factor;
+			long factor = Math.max(t / T[i], a / A[i]);
+			long nextT = T[i] * factor;
+			long nextA = A[i] * factor;
 			while (nextT < t || nextA < a) {
 				nextT += T[i];
 				nextA += A[i];
