@@ -1,6 +1,7 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 public class Main {
 
@@ -15,7 +16,39 @@ public class Main {
 		int Q = sc.nextInt();
 		int[] a = new int[Q];
 		int[] b = new int[Q];
-		sc.fill(a, b);
+		for (int i = 0; i < Q; i++) {
+			a[i] = sc.nextInt() - 1;
+			b[i] = sc.nextInt() - 1;
+		}
+		int[] next = new int[N];
+		for (int i = 0; i < N; i++) {
+			boolean found = false;
+			for (int j = i + 1; j < N; j++) {
+				if (x[j] - x[i] > L) {
+					next[i] = j - 1;
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				next[i] = N - 1;
+			}
+		}
+		System.err.println(Arrays.toString(next));
+		int[] prev = new int[N];
+		for (int i = N - 1; i >= 0; i--) {
+			boolean found = false;
+			for (int j = i - 1; j >= 0; j--) {
+				if (x[i] - x[j] > L) {
+					prev[i] = j + 1;
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				prev[i] = 0;
+			}
+		}
 
 		for (int i = 0; i < Q; i++) {
 			int start = a[i];
@@ -23,20 +56,16 @@ public class Main {
 
 			int days = 0;
 			if (start < end) {
-				int prev = x[start];
-				for (int j = start; j < end; j++) {
-					if (x[j + 1] - prev >= L) {
-						days++;
-						prev = x[j];
-					}
+				int index = start;
+				while (index < end) {
+					index = next[index];
+					days++;
 				}
 			} else {
-				int prev = x[start];
-				for (int j = start; j > end; j--) {
-					if (prev - x[j - 1] >= L) {
-						days++;
-						prev = x[j];
-					}
+				int index = start;
+				while (index > end) {
+					index = prev[index];
+					days++;
 				}
 			}
 
