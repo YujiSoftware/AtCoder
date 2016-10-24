@@ -27,6 +27,20 @@ public class MainTest {
 		assertIO(input, output);
 	}
 
+	@Test
+	public void 入力例_2() throws Exception {
+		String input = "9" + System.lineSeparator() +
+				"1 3 6 13 15 18 19 29 31" + System.lineSeparator() +
+				"10" + System.lineSeparator() +
+				"2" + System.lineSeparator() +
+				"1 9" + System.lineSeparator() +
+				"9 1";
+		String output = "5" + System.lineSeparator() +
+				"5";
+
+		assertIO(input, output);
+	}
+
 	private void assertIO(String input, String output) throws Exception {
 		ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
 		System.setIn(in);

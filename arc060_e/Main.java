@@ -1,7 +1,6 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 public class Main {
 
@@ -23,7 +22,8 @@ public class Main {
 		int[] next = new int[N];
 		for (int i = 0; i < N; i++) {
 			boolean found = false;
-			for (int j = i + 1; j < N; j++) {
+			int start = i == 0 ? 1 : next[i - 1];
+			for (int j = start; j < N; j++) {
 				if (x[j] - x[i] > L) {
 					next[i] = j - 1;
 					found = true;
@@ -34,11 +34,11 @@ public class Main {
 				next[i] = N - 1;
 			}
 		}
-		System.err.println(Arrays.toString(next));
 		int[] prev = new int[N];
 		for (int i = N - 1; i >= 0; i--) {
 			boolean found = false;
-			for (int j = i - 1; j >= 0; j--) {
+			int start = i == N - 1 ? N - 1 : next[i + 1];
+			for (int j = start; j >= 0; j--) {
 				if (x[i] - x[j] > L) {
 					prev[i] = j + 1;
 					found = true;
