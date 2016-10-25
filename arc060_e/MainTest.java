@@ -3,6 +3,8 @@ import static org.hamcrest.CoreMatchers.is;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -35,6 +37,32 @@ public class MainTest {
 				"2" + System.lineSeparator() +
 				"1 9" + System.lineSeparator() +
 				"9 1";
+		String output = "5" + System.lineSeparator() +
+				"5";
+
+		assertIO(input, output);
+	}
+
+	@Test
+	public void 入力例_3() throws Exception {
+		StringBuilder builder = new StringBuilder();
+		builder.append(10000);
+		builder.append(System.lineSeparator());
+		builder.append(
+				IntStream.rangeClosed(1, 10000)
+						.mapToObj(Integer::toString)
+						.collect(Collectors.joining(" ")));
+		builder.append(System.lineSeparator());
+		builder.append(1);
+		builder.append(System.lineSeparator());
+		builder.append(10000);
+		builder.append(System.lineSeparator());
+		builder.append(
+				IntStream.rangeClosed(1, 10000)
+						.mapToObj(i -> "1 10000")
+						.collect(Collectors.joining(System.lineSeparator())));
+
+		String input = builder.toString();
 		String output = "5" + System.lineSeparator() +
 				"5";
 
