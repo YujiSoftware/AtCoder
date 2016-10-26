@@ -61,13 +61,13 @@ public class Main {
 			int days = 0;
 			if (start < end) {
 				int index = start;
-				while (index <= end) {
+				while (index < end) {
 					index = next[index];
 					days++;
 				}
 			} else {
 				int index = start;
-				while (index >= end) {
+				while (index > end) {
 					index = prev[index];
 					days++;
 				}
