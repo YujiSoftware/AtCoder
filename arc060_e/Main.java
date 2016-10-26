@@ -20,33 +20,37 @@ public class Main {
 			b[i] = sc.nextInt() - 1;
 		}
 		int[] next = new int[N];
+		int begin = 1;
 		for (int i = 0; i < N; i++) {
 			boolean found = false;
-			int start = i == 0 ? 1 : next[i - 1];
-			for (int j = start; j < N; j++) {
+			for (int j = begin; j < N; j++) {
 				if (x[j] - x[i] > L) {
 					next[i] = j - 1;
+					begin = j - 1;
 					found = true;
 					break;
 				}
 			}
 			if (!found) {
 				next[i] = N - 1;
+				begin = N - 1;
 			}
 		}
 		int[] prev = new int[N];
+		begin = N - 1;
 		for (int i = N - 1; i >= 0; i--) {
 			boolean found = false;
-			int start = i == N - 1 ? N - 1 : next[i + 1];
-			for (int j = start; j >= 0; j--) {
+			for (int j = begin; j >= 0; j--) {
 				if (x[i] - x[j] > L) {
 					prev[i] = j + 1;
+					begin = j + 1;
 					found = true;
 					break;
 				}
 			}
 			if (!found) {
 				prev[i] = 0;
+				begin = 0;
 			}
 		}
 
@@ -57,13 +61,13 @@ public class Main {
 			int days = 0;
 			if (start < end) {
 				int index = start;
-				while (index < end) {
+				while (index <= end) {
 					index = next[index];
 					days++;
 				}
 			} else {
 				int index = start;
-				while (index > end) {
+				while (index >= end) {
 					index = prev[index];
 					days++;
 				}
