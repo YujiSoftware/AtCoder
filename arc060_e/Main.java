@@ -48,9 +48,8 @@ public class Main {
 		}
 		prev[0] = 0;
 		next[N - 1] = N - 1;
-		System.err.println(Arrays.toString(next));
-		System.err.println(Arrays.toString(prev));
 
+		StringBuilder result = new StringBuilder();
 		for (int i = 0; i < Q; i++) {
 			int start = a[i];
 			int end = b[i];
@@ -70,8 +69,11 @@ public class Main {
 				}
 			}
 
-			System.out.println(days);
+			result.append(days);
+			result.append(System.lineSeparator());
 		}
+
+		System.out.print(result);
 	}
 
 	public static class Scanner {

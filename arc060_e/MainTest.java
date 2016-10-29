@@ -45,6 +45,18 @@ public class MainTest {
 
 	@Test
 	public void 入力例_3() throws Exception {
+		String input = "2" + System.lineSeparator() +
+				"1 1000000000" + System.lineSeparator() +
+				"1000000000" + System.lineSeparator() +
+				"1" + System.lineSeparator() +
+				"1 2";
+		String output = "1";
+
+		assertIO(input, output);
+	}
+
+	@Test
+	public void 入力例_4() throws Exception {
 		StringBuilder builder = new StringBuilder();
 		builder.append(10000);
 		builder.append(System.lineSeparator());
@@ -63,8 +75,9 @@ public class MainTest {
 						.collect(Collectors.joining(System.lineSeparator())));
 
 		String input = builder.toString();
-		String output = "5" + System.lineSeparator() +
-				"5";
+		String output = IntStream.rangeClosed(1, 10000)
+				.mapToObj(i -> "9999")
+				.collect(Collectors.joining(System.lineSeparator()));
 
 		assertIO(input, output);
 	}
