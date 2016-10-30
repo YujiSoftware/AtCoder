@@ -3,6 +3,8 @@ import static org.hamcrest.CoreMatchers.is;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -58,26 +60,34 @@ public class MainTest {
 	@Test
 	public void 入力例_4() throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append(10000);
+		builder.append(100000);
 		builder.append(System.lineSeparator());
 		builder.append(
-				IntStream.rangeClosed(1, 10000)
+				IntStream.rangeClosed(1, 100000)
 						.mapToObj(Integer::toString)
 						.collect(Collectors.joining(" ")));
 		builder.append(System.lineSeparator());
 		builder.append(1);
 		builder.append(System.lineSeparator());
-		builder.append(10000);
+		builder.append(100000);
 		builder.append(System.lineSeparator());
 		builder.append(
-				IntStream.rangeClosed(1, 10000)
-						.mapToObj(i -> "1 10000")
+				IntStream.rangeClosed(1, 100000)
+						.mapToObj(i -> "1 100000")
 						.collect(Collectors.joining(System.lineSeparator())));
 
 		String input = builder.toString();
-		String output = IntStream.rangeClosed(1, 10000)
-				.mapToObj(i -> "9999")
+		String output = IntStream.rangeClosed(1, 100000)
+				.mapToObj(i -> "99999")
 				.collect(Collectors.joining(System.lineSeparator()));
+
+		assertIO(input, output);
+	}
+
+	@Test
+	public void 入力例_subtask2_02() throws Exception {
+		String input = new String(Files.readAllBytes(Paths.get("src\\in\\subtask2_02.txt")));
+		String output = new String(Files.readAllBytes(Paths.get("src\\out\\subtask2_02.txt")));
 
 		assertIO(input, output);
 	}
