@@ -42,8 +42,8 @@ public class MainTest {
 	@Test
 	public void 入力例_4() throws Exception {
 		String input = "4" + System.lineSeparator() +
-				"exprexpr" + System.lineSeparator() +
-				"expr";
+				"xabc" + System.lineSeparator() +
+				"yabc";
 		String output = "8";
 
 		assertIO(input, output);
@@ -52,9 +52,19 @@ public class MainTest {
 	@Test
 	public void 入力例_5() throws Exception {
 		String input = "4" + System.lineSeparator() +
-				"expr" + System.lineSeparator() +
-				"exprexpr";
+				"abcx" + System.lineSeparator() +
+				"abcy";
 		String output = "8";
+
+		assertIO(input, output);
+	}
+
+	@Test
+	public void 入力例_6() throws Exception {
+		String input = "4" + System.lineSeparator() +
+				"aaaa" + System.lineSeparator() +
+				"aabc";
+		String output = "6";
 
 		assertIO(input, output);
 	}

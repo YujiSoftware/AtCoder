@@ -18,7 +18,7 @@ class Main {
 			}
 
 			if (match) {
-				length = i + t.length();
+				length = Math.min(i + t.length(), length);
 			}
 		}
 
