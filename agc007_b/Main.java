@@ -22,22 +22,24 @@ public class Main {
 		}
 
 		int prev = a[p[0]] + b[p[0]];
-		for (int i = 0; i < N; i++) {
+		for (int i = 1; i < N; i++) {
 			int index = p[i];
 
-			if (prev <= a[index] + b[index]) {
-				int plus = (a[index] + b[index]) - prev + 1;
-				for (int j = index; j < N; j++) {
-					a[j] += plus;
-				}
-			} else {
-				int plus = prev - (a[index] + b[index]) + 1;
-				for (int j = 0; j <= index; j++) {
-					b[j] += plus;
-				}
+			int plus = prev - (a[index] + b[index]) + 1;
+			for (int j = index; j < N; j++) {
+				a[j] += plus;
+			}
+			for (int j = 0; j <= index; j++) {
+				b[j] += plus;
 			}
 
+			// System.err.println(prev + ", " + plus);
+
 			prev = a[index] + b[index];
+
+			// System.err.println(Arrays.toString(a));
+			// System.err.println(Arrays.toString(b));
+			// System.err.println();
 		}
 
 		StringBuilder builder = new StringBuilder();

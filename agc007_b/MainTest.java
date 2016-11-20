@@ -70,7 +70,7 @@ public class MainTest {
 			int current = p[i] - 1;
 			int next = p[i + 1] - 1;
 			assertTrue(
-					String.format("a[current] = %d, b[current] = %d, a[next] = %d, b[next] = %d)", a[current],
+					String.format("\na[current] = %d, b[current] = %d\na[next] = %d, b[next] = %d)", a[current],
 							b[current], a[next], b[next]),
 					a[current] + b[current] < a[next] + b[next]);
 		}
