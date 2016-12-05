@@ -13,17 +13,12 @@ public class Main {
 		int[] a = new int[N];
 		sc.fill(a);
 
-		int count = 0;
+		long count = 0;
 		for (int i = 1; i < N; i++) {
 			if (a[i] + a[i - 1] > x) {
 				int eat = (a[i] + a[i - 1]) - x;
-				if (a[i] >= a[i - 1]) {
-					a[i - 1] -= Math.max(eat - a[i], 0);
-					a[i] -= Math.min(a[i], eat);
-				} else {
-					a[i] -= Math.max(eat - a[i - 1], 0);
-					a[i - 1] -= Math.min(a[i], eat);
-				}
+				a[i - 1] -= Math.max(eat - a[i], 0);
+				a[i] -= Math.min(a[i], eat);
 				count += eat;
 			}
 		}
