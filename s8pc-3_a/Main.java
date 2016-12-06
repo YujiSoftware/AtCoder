@@ -22,7 +22,8 @@ class Main {
 		}
 
 		long count = 0;
-		for (long i = now; i <= 7L * (n - 2); i += 11) {
+		long limit = 7L * (n - 2);
+		for (long i = now; i <= limit; i += 11) {
 			if ((i - 1) % 7 < 5) {
 				count++;
 			}
