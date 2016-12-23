@@ -53,7 +53,7 @@ public class MainTest {
 				"456 404" + System.lineSeparator() +
 				"789 707" + System.lineSeparator() +
 				"1000 999";
-		String output = "2346";
+		String output = "2473";
 
 		assertIO(input, output);
 	}

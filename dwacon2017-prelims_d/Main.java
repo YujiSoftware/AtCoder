@@ -2,75 +2,46 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Comparator;
+import java.util.PriorityQueue;
 
 public class Main {
+
+	// Reference:
+	// http://dwacon2017-prelims.contest.atcoder.jp/submissions/1030683
 
 	public static void main(String[] args) throws IOException {
 		Scanner sc = new Scanner(System.in);
 		int N = sc.nextInt();
 		int M = sc.nextInt();
-		Sushi[] sushi = new Sushi[N];
-		for (int i = 0; i < N; i++) {
-			sushi[i] = new Sushi(i, sc.nextInt(), sc.nextInt());
-		}
-		boolean[] eat = new boolean[N];
+		int[] X = new int[N];
+		int[] Y = new int[N];
+		sc.fill(X, Y);
 
-		Arrays.sort(sushi, Comparator.comparingInt(Sushi::getX).thenComparing(Sushi::getIndex).reversed());
-
+		int max = 0;
 		int sum = 0;
-		int max = -1;
-		Sushi last = null;
-		for (int i = 0; i < Math.min(N, M); i++) {
-			sum += sushi[i].X;
-			max = Math.max(max, sushi[i].getIndex());
-			last = sushi[i];
-			eat[sushi[i].index] = true;
-		}
 
-		Arrays.sort(sushi, Comparator.comparingInt(Sushi::getIndex));
+		PriorityQueue<Integer> queue = new PriorityQueue<>();
+		for (int i = 0; i < N; i++) {
+			if (queue.size() >= M) {
+				sum -= queue.poll();
+			}
+			sum += X[i];
+			queue.add(X[i] - Y[i]);
 
-		if (M < N) {
-			int tmp = 0;
-			int index = 0;
-			int count = 0;
-			while (index < N && count < max) {
-				if (!eat[index]) {
-					tmp += sushi[index].getY();
-					count++;
-				}
-				index++;
+			if (max < sum) {
+				max = sum;
 			}
 
-			eat[last.getIndex()] = false;
-			sum += tmp;
+			debug(max, sum, queue);
 		}
-
-		System.out.println(sum);
+		System.out.println(max);
 	}
 
-	public static class Sushi {
-		public int index;
-		public int X;
-		public int Y;
+	private static boolean isDebug = System.getProperty("sun.desktop") != null;
 
-		public Sushi(int index, int x, int y) {
-			super();
-			this.index = index;
-			this.X = x;
-			this.Y = y;
-		}
-
-		public int getIndex() {
-			return index;
-		}
-
-		public int getX() {
-			return X;
-		}
-
-		public int getY() {
-			return Y;
+	private static void debug(Object... o) {
+		if (isDebug) {
+			System.err.println(Arrays.deepToString(o));
 		}
 	}
 
