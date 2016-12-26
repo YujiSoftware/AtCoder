@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -7,28 +9,20 @@ public class Main {
 		int x = sc.nextInt();
 		int y = sc.nextInt();
 
+		List<Integer> results = new ArrayList<>();
 		if (x <= y) {
-			if (x >= 0 && y >= 0) {
-				System.out.println(Math.abs(y - x));
-				System.err.println(1);
-			} else if (x <= 0 && y <= 0) {
-				System.out.println(Math.abs(y - x));
-				System.err.println(2);
-			} else {
-				System.out.println(Math.abs(y + x) + 1);
-				System.err.println(3);
-			}
-		} else {
-			if (x > 0 && y > 0) {
-				System.out.println(Math.abs(x - y) + 2);
-				System.err.println(4);
-			} else if (x < 0 && y < 0) {
-				System.out.println(Math.abs(x - y) + 2);
-				System.err.println(5);
-			} else {
-				System.out.println(Math.abs(x + y) + 1);
-				System.err.println(6);
-			}
+			results.add(y - x);
 		}
+		if (-x <= y) {
+			results.add(y - -x + 1);
+		}
+		if (x <= -y) {
+			results.add(-y - x + 1);
+		}
+		if (-x <= -y) {
+			results.add(-y - -x + 2);
+		}
+
+		System.out.println(results.stream().min(Integer::compareTo).get());
 	}
 }
