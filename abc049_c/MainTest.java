@@ -33,6 +33,27 @@ public class MainTest {
 		assertIO(input, output);
 	}
 
+	@Test
+	public void 入力例_FULL() throws Exception {
+		String[] patterns = new String[] {
+				"dreamer",
+				"dream",
+				"eraser",
+				"erase"
+		};
+		for (String p0 : patterns) {
+			for (String p1 : patterns) {
+				for (String p2 : patterns) {
+					String input = p0 + p1 + p2;
+					String output = "YES";
+
+					System.err.println(input);
+					assertIO(input, output);
+				}
+			}
+		}
+	}
+
 	private void assertIO(String input, String output) throws Exception {
 		ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
 		System.setIn(in);

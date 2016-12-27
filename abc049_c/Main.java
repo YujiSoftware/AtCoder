@@ -12,8 +12,8 @@ class Main {
 				"dreamererase",
 				"dreameraser",
 				"dreamerase",
-				"erasererase",
 				"eraseeraser",
+				"erasererase",
 
 				"dreamer",
 				"dream",
