@@ -44,11 +44,15 @@ public class MainTest {
 		for (String p0 : patterns) {
 			for (String p1 : patterns) {
 				for (String p2 : patterns) {
-					String input = p0 + p1 + p2;
-					String output = "YES";
+					for (String p3 : patterns) {
+						for (String p4 : patterns) {
+							String input = p0 + p1 + p2 + p3 + p4;
+							String output = "YES";
 
-					System.err.println(input);
-					assertIO(input, output);
+							System.err.println(input);
+							assertIO(input, output);
+						}
+					}
 				}
 			}
 		}
