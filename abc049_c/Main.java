@@ -11,14 +11,14 @@ class Main {
 		int position = 0;
 		int prev = 0;
 		while (position < S.length()) {
-			String current = S.substring(position);
-
+			String current = S.substring(position, Math.min(position + 5, S.length()));
+			// debug(current);
 			if (current.startsWith("dream")) {
 				position += "dream".length();
 				prev = 1;
 			} else if (current.startsWith("er")) {
 				position += "er".length();
-				if (prev == 2) {
+				if (prev == 2 || prev == 4) {
 					prev = 4;
 				} else {
 					prev = 2;

@@ -34,6 +34,14 @@ public class MainTest {
 	}
 
 	@Test
+	public void 入力例_4() throws Exception {
+		String input = "dreamererer";
+		String output = "NO";
+
+		assertIO(input, output);
+	}
+
+	@Test
 	public void 入力例_FULL() throws Exception {
 		String[] patterns = new String[] {
 				"dreamer",
@@ -56,6 +64,26 @@ public class MainTest {
 				}
 			}
 		}
+	}
+
+	@Test
+	public void 入力例_LARGE() throws Exception {
+		String[] patterns = new String[] {
+				"dreamer",
+				"dream",
+				"eraser",
+				"erase"
+		};
+		StringBuilder sb = new StringBuilder(10000);
+		int index = 0;
+		while (sb.length() < 10000) {
+			sb.append(patterns[index++ % 4]);
+		}
+
+		String input = sb.toString();
+		String output = "YES";
+
+		assertIO(input, output);
 	}
 
 	private void assertIO(String input, String output) throws Exception {
