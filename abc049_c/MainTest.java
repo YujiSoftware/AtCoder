@@ -1,100 +1,136 @@
-import static org.hamcrest.CoreMatchers.is;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+class Main {
+	public static void main(String[] args) throws IOException {
+		Scanner sc = new Scanner(System.in);
+		String S = sc.next();
 
-import org.junit.Assert;
-import org.junit.Test;
+		String reversed = new StringBuilder(S).reverse().toString();
+		String[] values = new String[] { "remaerd", "maerd", "resare", "esare", };
 
-public class MainTest {
+		int position = 0;
+		while (position < S.length()) {
+			String current = reversed.substring(position, Math.min(position + 7, S.length()));
 
-	@Test
-	public void 入力例_1() throws Exception {
-		String input = "erasedream";
-		String output = "YES";
-
-		assertIO(input, output);
-	}
-
-	@Test
-	public void 入力例_2() throws Exception {
-		String input = "dreameraser";
-		String output = "YES";
-
-		assertIO(input, output);
-	}
-
-	@Test
-	public void 入力例_3() throws Exception {
-		String input = "dreamerer";
-		String output = "NO";
-
-		assertIO(input, output);
-	}
-
-	@Test
-	public void 入力例_4() throws Exception {
-		String input = "dreamererer";
-		String output = "NO";
-
-		assertIO(input, output);
-	}
-
-	@Test
-	public void 入力例_FULL() throws Exception {
-		String[] patterns = new String[] {
-				"dreamer",
-				"dream",
-				"eraser",
-				"erase"
-		};
-		for (String p0 : patterns) {
-			for (String p1 : patterns) {
-				for (String p2 : patterns) {
-					for (String p3 : patterns) {
-						for (String p4 : patterns) {
-							String input = p0 + p1 + p2 + p3 + p4;
-							String output = "YES";
-
-							System.err.println(input);
-							assertIO(input, output);
-						}
-					}
+			boolean matched = false;
+			for (String value : values) {
+				if (current.startsWith(value)) {
+					matched = true;
+					position += value.length();
+					break;
 				}
 			}
+
+			if (!matched) {
+				// debug(current);
+				System.out.println("NO");
+				return;
+			}
+		}
+
+		System.out.println("YES");
+	}
+
+	private static boolean isDebug = System.getProperty("sun.desktop") != null;
+
+	private static void debug(Object... o) {
+		if (isDebug) {
+			System.err.println(Arrays.deepToString(o));
 		}
 	}
 
-	@Test
-	public void 入力例_LARGE() throws Exception {
-		String[] patterns = new String[] {
-				"dreamer",
-				"dream",
-				"eraser",
-				"erase"
-		};
-		StringBuilder sb = new StringBuilder(10000);
-		int index = 0;
-		while (sb.length() < 10000) {
-			sb.append(patterns[index++ % 4]);
+	public static class Scanner {
+		private BufferedInputStream inputStream;
+
+		public Scanner(InputStream in) {
+			inputStream = new BufferedInputStream(in);
 		}
 
-		String input = sb.toString();
-		String output = "YES";
+		public int nextInt() throws IOException {
+			int num = 0;
 
-		assertIO(input, output);
-	}
+			int read = skip();
+			do {
+				num = num * 10 + (read - 0x30);
+			} while ((read = inputStream.read()) > 0x20);
 
-	private void assertIO(String input, String output) throws Exception {
-		ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-		System.setIn(in);
+			return num;
+		}
 
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		System.setOut(new PrintStream(out));
+		public void fill(int[] a) throws IOException {
+			for (int i = 0; i < a.length; i++) {
+				a[i] = nextInt();
+			}
+		}
 
-		Main.main(new String[0]);
+		public void fill(int[] a, int[] b) throws IOException {
+			if (a.length != b.length) {
+				throw new IllegalArgumentException();
+			}
 
-		Assert.assertThat(out.toString(), is(output + System.lineSeparator()));
+			for (int i = 0; i < a.length; i++) {
+				a[i] = nextInt();
+				b[i] = nextInt();
+			}
+		}
+
+		public long nextLong() throws IOException {
+			long num = 0;
+
+			int read = skip();
+			do {
+				num = num * 10 + (read - 0x30);
+			} while ((read = inputStream.read()) > 0x20);
+
+			return num;
+		}
+
+		public void fill(long[] a) throws IOException {
+			for (int i = 0; i < a.length; i++) {
+				a[i] = nextLong();
+			}
+		}
+
+		public void fill(long[] a, long[] b) throws IOException {
+			if (a.length != b.length) {
+				throw new IllegalArgumentException();
+			}
+
+			for (int i = 0; i < a.length; i++) {
+				a[i] = nextLong();
+				b[i] = nextLong();
+			}
+		}
+
+		public long[] nextLong(int n) throws IOException {
+			long[] array = new long[n];
+			for (int i = 0; i < n; i++) {
+				array[i] = nextLong();
+			}
+
+			return array;
+		}
+
+		public String next() throws IOException {
+			StringBuilder builder = new StringBuilder();
+
+			int read = skip();
+			do {
+				builder.append((char) read);
+			} while ((read = inputStream.read()) > 0x20);
+
+			return builder.toString();
+		}
+
+		private int skip() throws IOException {
+			int read;
+			while ((read = inputStream.read()) <= 0x20)
+				;
+
+			return read;
+		}
 	}
 }
