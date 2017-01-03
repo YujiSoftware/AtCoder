@@ -43,7 +43,6 @@ public class Main {
 		}
 
 		boolean changed;
-
 		do {
 			changed = false;
 
@@ -68,7 +67,7 @@ public class Main {
 
 		String[] result = new String[N];
 		for (int i = 0; i < N; i++) {
-			HashSet<Integer> set = new HashSet<>(road.get(i));
+			HashSet<Integer> set = road.get(i);
 			set.retainAll(train.get(i));
 
 			result[i] = Integer.toString(set.size());
