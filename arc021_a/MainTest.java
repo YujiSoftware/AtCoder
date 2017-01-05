@@ -53,6 +53,17 @@ public class MainTest {
 		assertIO(input, output);
 	}
 
+	@Test
+	public void 入力例5() throws Exception {
+		String input = "2 4 2 4" + System.lineSeparator() +
+				"4 2 4 2" + System.lineSeparator() +
+				"2 4 2 8" + System.lineSeparator() +
+				"4 2 4 8";
+		String output = "CONTINUE";
+
+		assertIO(input, output);
+	}
+
 	private void assertIO(String input, String output) throws Exception {
 		ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
 		System.setIn(in);
