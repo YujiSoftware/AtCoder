@@ -1,10 +1,17 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -13,62 +20,88 @@ public class Main {
 		int N = sc.nextInt();
 		int K = sc.nextInt();
 		int L = sc.nextInt();
-		int[] p = new int[K];
-		int[] q = new int[K];
-		sc.fill(p, q);
-		int[] r = new int[L];
-		int[] s = new int[L];
-		sc.fill(r, s);
-
-		List<HashSet<Integer>> road = new ArrayList<>();
-		List<HashSet<Integer>> train = new ArrayList<>();
-		for (int i = 0; i < N; i++) {
-			HashSet<Integer> set = new HashSet<>();
-			set.add(i);
-			road.add(set);
-		}
-		for (int i = 0; i < N; i++) {
-			HashSet<Integer> set = new HashSet<>();
-			set.add(i);
-			train.add(set);
-		}
-
+		List<Pair> pq = new ArrayList<>();
 		for (int i = 0; i < K; i++) {
-			road.get(p[i] - 1).add(q[i] - 1);
-			road.get(q[i] - 1).add(p[i] - 1);
+			int p = sc.nextInt() - 1;
+			int q = sc.nextInt() - 1;
+
+			pq.add(new Pair(p, q));
+			pq.add(new Pair(q, p));
 		}
+		Map<Integer, List<Integer>> road = pq.stream()
+				.collect(Collectors.groupingBy(Pair::getKey, Collectors.mapping(Pair::getValue, Collectors.toList())));
+
+		List<Pair> rs = new ArrayList<>();
 		for (int i = 0; i < L; i++) {
-			train.get(r[i] - 1).add(s[i] - 1);
-			train.get(s[i] - 1).add(r[i] - 1);
+			int r = sc.nextInt() - 1;
+			int s = sc.nextInt() - 1;
+
+			rs.add(new Pair(r, s));
+			rs.add(new Pair(s, r));
+		}
+		Map<Integer, List<Integer>> train = rs.stream()
+				.collect(Collectors.groupingBy(Pair::getKey, Collectors.mapping(Pair::getValue, Collectors.toList())));
+
+		Map<Integer, Set<Integer>> roadMap = new HashMap<>();
+		for (int i = 0; i < N; i++) {
+			if (roadMap.containsKey(i)) {
+				continue;
+			}
+
+			Deque<Integer> queue = new ArrayDeque<>();
+			Set<Integer> set = new HashSet<Integer>();
+			queue.add(i);
+
+			while (!queue.isEmpty()) {
+				Integer index = queue.poll();
+				if (set.contains(index)) {
+					continue;
+				}
+				set.add(index);
+
+				List<Integer> list = road.getOrDefault(index, Collections.emptyList());
+				for (Integer next : list) {
+					queue.add(next);
+				}
+			}
+
+			for (Integer index : set) {
+				roadMap.put(index, set);
+			}
 		}
 
-		boolean changed;
-		do {
-			changed = false;
+		Map<Integer, Set<Integer>> trainMap = new HashMap<>();
+		for (int i = 0; i < N; i++) {
+			if (trainMap.containsKey(i)) {
+				continue;
+			}
 
-			for (int i = 0; i < N; i++) {
-				HashSet<Integer> set = road.get(i);
-				for (Integer index : set.toArray(new Integer[set.size()])) {
-					changed |= set.addAll(road.get(index));
+			Deque<Integer> queue = new ArrayDeque<>();
+			Set<Integer> set = new HashSet<Integer>();
+			queue.add(i);
+
+			while (!queue.isEmpty()) {
+				Integer index = queue.poll();
+				if (set.contains(index)) {
+					continue;
+				}
+				set.add(index);
+
+				List<Integer> list = train.getOrDefault(index, Collections.emptyList());
+				for (Integer next : list) {
+					queue.add(next);
 				}
 			}
-		} while (changed);
 
-		do {
-			changed = false;
-
-			for (int i = 0; i < N; i++) {
-				HashSet<Integer> set = train.get(i);
-				for (Integer index : set.toArray(new Integer[set.size()])) {
-					changed |= set.addAll(train.get(index));
-				}
+			for (Integer index : set) {
+				trainMap.put(index, set);
 			}
-		} while (changed);
+		}
 
 		String[] result = new String[N];
 		for (int i = 0; i < N; i++) {
-			HashSet<Integer> set = road.get(i);
-			set.retainAll(train.get(i));
+			Set<Integer> set = new HashSet<>(roadMap.getOrDefault(i, Collections.emptySet()));
+			set.retainAll(trainMap.getOrDefault(i, Collections.emptySet()));
 
 			result[i] = Integer.toString(set.size());
 		}
@@ -81,6 +114,34 @@ public class Main {
 	private static void debug(Object... o) {
 		if (isDebug) {
 			System.err.println(Arrays.deepToString(o));
+		}
+	}
+
+	public static class Pair {
+		private int key;
+		private int value;
+
+		public Pair(int key, int value) {
+			super();
+			this.key = key;
+			this.value = value;
+		}
+
+		public int getKey() {
+			return key;
+		}
+
+		public int getValue() {
+			return value;
+		}
+
+		public void setValue(int value) {
+			this.value = value;
+		}
+
+		@Override
+		public String toString() {
+			return "{" + key + ", " + value + "}";
 		}
 	}
 
