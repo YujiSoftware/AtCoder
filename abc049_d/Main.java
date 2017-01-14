@@ -11,50 +11,36 @@ public class Main {
 		int N = sc.nextInt();
 		int K = sc.nextInt();
 		int L = sc.nextInt();
-		int[] p = new int[K];
-		int[] q = new int[K];
-		for (int i = 0; i < K; i++) {
-			p[i] = sc.nextInt() - 1;
-			q[i] = sc.nextInt() - 1;
+		int[][] road = new int[N][N];
+		int[][] train = new int[N][N];
+		for (int i = 0; i < N; i++) {
+			Arrays.fill(road[i], 100);
+			Arrays.fill(train[i], 100);
 		}
-		int[] r = new int[L];
-		int[] s = new int[L];
-		for (int i = 0; i < L; i++) {
-			r[i] = sc.nextInt() - 1;
-			s[i] = sc.nextInt() - 1;
+		for (int i = 0; i < N; i++) {
+			road[i][i] = 0;
+			train[i][i] = 0;
 		}
 
-		int[][] road = new int[N][N];
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				if (i != j) {
-					road[i][j] = 100;
-				}
-			}
-		}
 		for (int i = 0; i < K; i++) {
-			road[p[i]][q[i]] = 0;
-			road[q[i]][p[i]] = 0;
+			int p = sc.nextInt() - 1;
+			int q = sc.nextInt() - 1;
+			road[p][q] = 0;
+			road[q][p] = 0;
 		}
+		for (int i = 0; i < L; i++) {
+			int r = sc.nextInt() - 1;
+			int s = sc.nextInt() - 1;
+			train[r][s] = 0;
+			train[s][r] = 0;
+		}
+
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
 				for (int k = 0; k < N; k++) {
 					road[j][k] = Math.min(road[j][k], road[j][i] + road[i][k]);
 				}
 			}
-		}
-
-		int[][] train = new int[N][N];
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				if (i != j) {
-					train[i][j] = 100;
-				}
-			}
-		}
-		for (int i = 0; i < L; i++) {
-			train[r[i]][s[i]] = 0;
-			train[s[i]][r[i]] = 0;
 		}
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
@@ -73,10 +59,6 @@ public class Main {
 			}
 		}
 
-		debug("Road:");
-		for (int x = 0; x < road.length; x++) {
-			debug(road[x]);
-		}
 		System.out.println(Arrays.stream(result).mapToObj(Integer::toString).collect(Collectors.joining(" ")));
 	}
 
