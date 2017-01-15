@@ -1,8 +1,19 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.omg.CORBA.Object;
 
 public class Main {
 
@@ -11,55 +22,84 @@ public class Main {
 		int N = sc.nextInt();
 		int K = sc.nextInt();
 		int L = sc.nextInt();
-		int[][] road = new int[N][N];
-		int[][] train = new int[N][N];
-		for (int i = 0; i < N; i++) {
-			Arrays.fill(road[i], 100);
-			Arrays.fill(train[i], 100);
-		}
-		for (int i = 0; i < N; i++) {
-			road[i][i] = 0;
-			train[i][i] = 0;
-		}
-
+		List<Pair> pq = new ArrayList<>();
 		for (int i = 0; i < K; i++) {
 			int p = sc.nextInt() - 1;
 			int q = sc.nextInt() - 1;
-			road[p][q] = 0;
-			road[q][p] = 0;
+
+			pq.add(new Pair(p, q));
+			pq.add(new Pair(q, p));
 		}
+		Map<Integer, List<Integer>> road = pq.stream()
+				.collect(Collectors.groupingBy(Pair::getKey, Collectors.mapping(Pair::getValue, Collectors.toList())));
+
+		List<Pair> rs = new ArrayList<>();
 		for (int i = 0; i < L; i++) {
 			int r = sc.nextInt() - 1;
 			int s = sc.nextInt() - 1;
-			train[r][s] = 0;
-			train[s][r] = 0;
-		}
 
+			rs.add(new Pair(r, s));
+			rs.add(new Pair(s, r));
+		}
+		Map<Integer, List<Integer>> train = rs.stream()
+				.collect(Collectors.groupingBy(Pair::getKey, Collectors.mapping(Pair::getValue, Collectors.toList())));
+
+		Map<Integer, Set<Integer>> roadMap = createMap(N, road);
+		Map<Integer, Set<Integer>> trainMap = createMap(N, train);
+
+		Map<Pair, String> cache = new HashMap<>();
+
+		String[] result = new String[N];
 		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				for (int k = 0; k < N; k++) {
-					road[j][k] = Math.min(road[j][k], road[j][i] + road[i][k]);
-				}
+			Set<Integer> roadSet = roadMap.getOrDefault(i, Collections.emptySet());
+			Set<Integer> trainSet = trainMap.getOrDefault(i, Collections.emptySet());
+
+			// TODO: ちゃんと等価性を比較する
+			Pair hashCode = new Pair(System.identityHashCode(roadSet), System.identityHashCode(trainSet));
+			String value = cache.get(hashCode);
+			if (value != null) {
+				result[i] = value;
+			} else {
+				Set<Integer> set = new HashSet<>(roadSet);
+				set.retainAll(trainMap.getOrDefault(i, Collections.emptySet()));
+
+				value = Integer.toString(set.size());
+
+				result[i] = value;
+				cache.put(hashCode, value);
 			}
 		}
+
+		System.out.println(String.join(" ", result));
+	}
+
+	private static Map<Integer, Set<Integer>> createMap(int N, Map<Integer, List<Integer>> road) {
+		Map<Integer, Set<Integer>> map = new HashMap<>();
 		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				for (int k = 0; k < N; k++) {
-					train[j][k] = Math.min(train[j][k], train[j][i] + train[i][k]);
+			if (map.containsKey(i)) {
+				continue;
+			}
+
+			Deque<Integer> queue = new ArrayDeque<>();
+			Set<Integer> set = new HashSet<Integer>();
+			queue.add(i);
+
+			while (!queue.isEmpty()) {
+				Integer index = queue.poll();
+				if (set.contains(index)) {
+					continue;
 				}
+				set.add(index);
+
+				queue.addAll(road.getOrDefault(index, Collections.emptyList()));
+			}
+
+			for (Integer index : set) {
+				map.put(index, set);
 			}
 		}
 
-		int[] result = new int[N];
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				if (road[i][j] == 0 && train[i][j] == 0) {
-					result[i]++;
-				}
-			}
-		}
-
-		System.out.println(Arrays.stream(result).mapToObj(Integer::toString).collect(Collectors.joining(" ")));
+		return map;
 	}
 
 	private static boolean isDebug = System.getProperty("sun.desktop") != null;
@@ -90,6 +130,31 @@ public class Main {
 
 		public void setValue(int value) {
 			this.value = value;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + key;
+			result = prime * result + value;
+			return result;
+		}
+
+		@Override
+		public boolean equals(java.lang.Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Pair other = (Pair) obj;
+			if (key != other.key)
+				return false;
+			if (value != other.value)
+				return false;
+			return true;
 		}
 
 		@Override
