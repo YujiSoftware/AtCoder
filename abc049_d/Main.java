@@ -48,8 +48,8 @@ public class Main {
 		Map<Integer, Set<Integer>> trainMap = createMap(N, train);
 
 		Map<Pair, String> cache = new HashMap<>();
-
 		String[] result = new String[N];
+
 		for (int i = 0; i < N; i++) {
 			Set<Integer> roadSet = roadMap.getOrDefault(i, Collections.emptySet());
 			Set<Integer> trainSet = trainMap.getOrDefault(i, Collections.emptySet());
@@ -91,7 +91,9 @@ public class Main {
 				}
 				set.add(index);
 
-				queue.addAll(road.getOrDefault(index, Collections.emptyList()));
+				for (Integer value : road.getOrDefault(index, Collections.emptyList())) {
+					queue.addFirst(value);
+				}
 			}
 
 			for (Integer index : set) {
