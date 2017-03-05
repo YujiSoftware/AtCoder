@@ -16,18 +16,15 @@ class Main {
 		for (int i = 0; i < K; i++) {
 			A.add(sc.nextInt() - 1);
 		}
-		String[] S = new String[N];
-		for (int i = 0; i < S.length; i++) {
-			S[i] = sc.next();
-		}
 
 		List<String> hits = new ArrayList<>();
 		List<String> unhits = new ArrayList<>();
-		for (int i = 0; i < S.length; i++) {
+		for (int i = 0; i < N; i++) {
+			String S = sc.next();
 			if (A.contains(i)) {
-				hits.add(S[i]);
+				hits.add(S);
 			} else {
-				unhits.add(S[i]);
+				unhits.add(S);
 			}
 		}
 
