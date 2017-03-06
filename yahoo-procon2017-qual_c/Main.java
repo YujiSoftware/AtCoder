@@ -41,23 +41,24 @@ class Main {
 		}
 
 		boolean match;
+		int len = min.length();
 		do {
 			match = true;
 
 			for (String hit : hits) {
-				if (!hit.startsWith(min)) {
-					min = min.substring(0, min.length() - 1);
+				if (!hit.regionMatches(0, min, 0, len)) {
+					len--;
 					match = false;
 					break;
 				}
 			}
-		} while (!match && !min.isEmpty());
+		} while (!match && len > 0);
 
-		String answer = null;
-		while (!min.isEmpty()) {
+		int answer = -1;
+		while (len > 0) {
 			boolean success = true;
 			for (String unhit : unhits) {
-				if (unhit.startsWith(min)) {
+				if (unhit.regionMatches(0, min, 0, len)) {
 					success = false;
 					break;
 				}
@@ -67,12 +68,12 @@ class Main {
 				break;
 			}
 
-			answer = min;
-			min = min.substring(0, min.length() - 1);
+			answer = len;
+			len--;
 		}
 
-		if (answer != null) {
-			System.out.println(answer);
+		if (answer != -1) {
+			System.out.println(min.substring(0, answer));
 		} else {
 			System.out.println(-1);
 		}
@@ -88,6 +89,7 @@ class Main {
 
 	public static class Scanner {
 		private BufferedInputStream inputStream;
+		private StringBuilder buffer = new StringBuilder();
 
 		public Scanner(InputStream in) {
 			inputStream = new BufferedInputStream(in);
@@ -159,14 +161,15 @@ class Main {
 		}
 
 		public String next() throws IOException {
-			StringBuilder builder = new StringBuilder();
-
 			int read = skip();
 			do {
-				builder.append((char) read);
+				buffer.append((char) read);
 			} while ((read = inputStream.read()) > 0x20);
 
-			return builder.toString();
+			String text = buffer.toString();
+			buffer.delete(0, buffer.length());
+
+			return text;
 		}
 
 		private int skip() throws IOException {
