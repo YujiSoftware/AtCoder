@@ -7,33 +7,55 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		Scanner sc = new Scanner(System.in);
-		int H = sc.nextInt();
-		int W = sc.nextInt();
+		long H = sc.nextInt();
+		long W = sc.nextInt();
 		if (H % 3 == 0 || W % 3 == 0) {
 			System.out.println(0);
 		} else {
-			if (W > H) {
-				if (H % 2 == 0) {
-					int w1 = (int) Math.ceil(W / 3.0);
-					int size = (int) Math.abs((w1 * H) - ((W - w1) * (H / 2)));
-					System.out.println(size);
-				} else {
-					int w1 = (int) Math.floor(W / 3.0);
-					int size = (int) Math.abs((w1 * H) - ((W - w1) * (H / 2)));
-					System.out.println(size);
-				}
-			} else {
-				if (W % 2 == 0) {
-					int h1 = (int) Math.floor(H / 3.0);
-					int size = (int) Math.abs((h1 * W) - ((H - h1) * (W / 2)));
-					System.out.println(size);
-				} else {
-					int h1 = (int) Math.ceil(H / 3.0);
-					int size = (int) Math.abs((h1 * W) - ((H - h1) * (W / 2)));
-					System.out.println(size);
-				}
-			}
+			int w1 = (int) Math.ceil(W / 3.0);
+			long[] size1 = {
+					w1 * H,
+					(W - w1) * (H / 2),
+					(W - w1) * (H - (H / 2))
+			};
+			long diff1 = max(size1) - min(size1);
+
+			int w2 = (int) Math.floor(W / 3.0);
+			long[] size2 = {
+					w2 * H,
+					(W - w2) * (H / 2),
+					(W - w2) * (H - (H / 2))
+			};
+			long diff2 = max(size2) - min(size2);
+
+			int h1 = (int) Math.ceil(H / 3.0);
+			long[] size3 = {
+					h1 * W,
+					(H - h1) * (W / 2),
+					(H - h1) * (W - (W / 2))
+			};
+			long diff3 = max(size3) - min(size3);
+
+			int h2 = (int) Math.floor(H / 3.0);
+			long[] size4 = {
+					h2 * W,
+					(H - h2) * (W / 2),
+					(H - h2) * (W - (W / 2))
+			};
+			long diff4 = max(size4) - min(size4);
+
+			System.out.println(min(diff1, diff2, diff3, diff4));
 		}
+	}
+
+	private static long min(long... values) {
+		Arrays.sort(values);
+		return values[0];
+	}
+
+	private static long max(long... values) {
+		Arrays.sort(values);
+		return values[values.length - 1];
 	}
 
 	public static class Pair {
