@@ -49,6 +49,14 @@ public class MainTest {
 		assertIO(input, output);
 	}
 
+	@Test
+	public void 入力例_MIN() throws Exception {
+		String input = "2 2";
+		String output = "1";
+
+		assertIO(input, output);
+	}
+
 	private void assertIO(String input, String output) throws Exception {
 		ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
 		System.setIn(in);

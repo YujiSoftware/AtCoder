@@ -9,43 +9,63 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		long H = sc.nextInt();
 		long W = sc.nextInt();
-		if (H % 3 == 0 || W % 3 == 0) {
-			System.out.println(0);
-		} else {
-			int w1 = (int) Math.ceil(W / 3.0);
-			long[] size1 = {
-					w1 * H,
-					(W - w1) * (H / 2),
-					(W - w1) * (H - (H / 2))
-			};
-			long diff1 = max(size1) - min(size1);
+		int w1 = (int) Math.ceil(W / 3.0);
+		long[] sizeW1 = {
+				w1 * H,
+				(W - w1) * (H / 2),
+				(W - w1) * (H - (H / 2))
+		};
+		long diffW1 = max(sizeW1) - min(sizeW1);
+		long[] sizeW3 = {
+				w1 * H,
+				w1 * H,
+				(W - w1 * 2) * H
+		};
+		long diffW3 = max(sizeW3) - min(sizeW3);
 
-			int w2 = (int) Math.floor(W / 3.0);
-			long[] size2 = {
-					w2 * H,
-					(W - w2) * (H / 2),
-					(W - w2) * (H - (H / 2))
-			};
-			long diff2 = max(size2) - min(size2);
+		int w2 = (int) Math.floor(W / 3.0);
+		long[] sizeW2 = {
+				w2 * H,
+				(W - w2) * (H / 2),
+				(W - w2) * (H - (H / 2))
+		};
+		long diffW2 = max(sizeW2) - min(sizeW2);
+		long[] size4 = {
+				w2 * H,
+				w2 * H,
+				(W - w2 * 2) * H
+		};
+		long diffW4 = max(size4) - min(size4);
 
-			int h1 = (int) Math.ceil(H / 3.0);
-			long[] size3 = {
-					h1 * W,
-					(H - h1) * (W / 2),
-					(H - h1) * (W - (W / 2))
-			};
-			long diff3 = max(size3) - min(size3);
+		int h1 = (int) Math.ceil(H / 3.0);
+		long[] sizeH1 = {
+				h1 * W,
+				(H - h1) * (W / 2),
+				(H - h1) * (W - (W / 2))
+		};
+		long diffH1 = max(sizeH1) - min(sizeH1);
+		long[] sizeH3 = {
+				h1 * W,
+				h1 * W,
+				(H - h1 * 2) * W
+		};
+		long diffH3 = max(sizeH3) - min(sizeH3);
 
-			int h2 = (int) Math.floor(H / 3.0);
-			long[] size4 = {
-					h2 * W,
-					(H - h2) * (W / 2),
-					(H - h2) * (W - (W / 2))
-			};
-			long diff4 = max(size4) - min(size4);
+		int h2 = (int) Math.floor(H / 3.0);
+		long[] sizeH2 = {
+				h2 * W,
+				(H - h2) * (W / 2),
+				(H - h2) * (W - (W / 2))
+		};
+		long diffH2 = max(sizeH2) - min(sizeH2);
+		long[] sizeH4 = {
+				h2 * W,
+				h2 * W,
+				(H - h2 * 2) * W
+		};
+		long diffH4 = max(sizeH4) - min(sizeH4);
 
-			System.out.println(min(diff1, diff2, diff3, diff4));
-		}
+		System.out.println(min(diffW1, diffW2, diffW3, diffW4, diffH1, diffH2, diffH3, diffH4));
 	}
 
 	private static long min(long... values) {
