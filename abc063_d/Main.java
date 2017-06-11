@@ -21,15 +21,15 @@ public class Main {
 		}
 
 		double diff = A - B;
-		int left = 0;
-		int right = h[0];
+		long left = 0;
+		long right = h[0];
 		do {
-			int T = (right - left) / 2 + left;
+			long T = (right - left) / 2 + left;
 
-			int sum = 0;
+			long sum = 0;
 			boolean success = true;
 			for (int i = 0; i < h.length; i++) {
-				int leftover = h[i] - B * T;
+				long leftover = h[i] - B * T;
 				debug(leftover);
 				if (leftover > 0) {
 					sum += (long) Math.ceil(leftover / diff);
