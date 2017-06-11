@@ -70,6 +70,17 @@ public class MainTest {
 		assertIO(input, output);
 	}
 
+	@Test
+	public void 入力例_6() throws Exception {
+		String input = "3 1000000000 999999999" + System.lineSeparator() +
+				"1000000000" + System.lineSeparator() +
+				"1000000000" + System.lineSeparator() +
+				"1000000000";
+		String output = "2";
+
+		assertIO(input, output);
+	}
+
 	private void assertIO(String input, String output) throws Exception {
 		ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
 		System.setIn(in);

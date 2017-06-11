@@ -2,7 +2,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Comparator;
 
 public class Main {
 
@@ -14,57 +13,43 @@ public class Main {
 		int[] h = new int[N];
 		sc.fill(h);
 
-		h = Arrays.stream(h)
-				.boxed()
-				.sorted(Comparator.reverseOrder())
-				.mapToInt(i -> i)
-				.toArray();
-		int diff = (A - B);
-		int count = 0;
+		Arrays.sort(h);
+		for (int i = 0; i < h.length / 2; i++) {
+			int tmp = h[h.length - i - 1];
+			h[h.length - i - 1] = h[i];
+			h[i] = tmp;
+		}
 
-		boolean all = false;
-		while (true) {
-			if (!all) {
-				int value = h.length;
-				if (!all) {
-					value = 1;
-					int first = h[0];
-					for (int i = 1; i < h.length; i++) {
-						if (h[i] != first) {
-							break;
-						}
-						value++;
-					}
-				}
+		double diff = A - B;
+		int left = 0;
+		int right = h[0];
+		do {
+			int T = (right - left) / 2 + left;
 
-				count += value;
-				for (int i = 0; i < value; i++) {
-					h[i] -= diff;
-				}
+			int sum = 0;
+			boolean success = true;
+			for (int i = 0; i < h.length; i++) {
+				int leftover = h[i] - B * T;
+				debug(leftover);
+				if (leftover > 0) {
+					sum += (long) Math.ceil(leftover / diff);
 
-				for (int i = 1; i < h.length; i++) {
-					if (h[i - 1] <= h[i]) {
-						int tmp = h[i - 1];
-						h[i - 1] = h[i];
-						h[i] = tmp;
-					} else {
+					if (T < sum) {
+						success = false;
 						break;
 					}
 				}
+			}
 
-				if (h[0] == h[h.length - 1]) {
-					all = true;
-				}
+			debug(success, left, T, right);
+			if (success) {
+				right = T;
 			} else {
-				h[0] -= diff;
-				count += h.length;
+				left = T;
 			}
-			if (h[0] - count * B <= 0) {
-				break;
-			}
-		}
+		} while (left < right - 1);
 
-		System.out.println(count);
+		System.out.println(right);
 	}
 
 	private static boolean isDebug = System.getProperty("sun.desktop") != null;
