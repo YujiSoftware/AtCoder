@@ -50,7 +50,7 @@ public class Main {
 
 			Board newBoard = board.copy();
 			int newDiff = newBoard.getDiff(newPosition);
-			int newValue = Math.min(80, Math.max(0, newDiff));
+			int newValue = Math.min(100, Math.max(0, newDiff));
 			newBoard.setValue(newPosition, newValue);
 
 			long newScore = score;
@@ -141,12 +141,15 @@ public class Main {
 
 			int value = Math.abs(v);
 			int sign = v > 0 ? 1 : -1;
-			int yLimit = Math.min(p.y + value, N);
-			int xLimit = Math.min(p.x + value, N);
 
-			for (int y = Math.max(0, p.y - value + 1); y < yLimit; y++) {
+			int yBegin = Math.max(0, p.y - value + 1);
+			int xBegin = Math.max(0, p.x - value + 1);
+			int yEnd = Math.min(p.y + value, N);
+			int xEnd = Math.min(p.x + value, N);
+
+			for (int y = yBegin; y < yEnd; y++) {
 				int diffY = Math.abs(y - p.y);
-				for (int x = Math.max(0, p.x - value + 1); x < xLimit; x++) {
+				for (int x = xBegin; x < xEnd; x++) {
 					int diffX = Math.abs(x - p.x);
 					int diff = diffX + diffY;
 					if (diff < value) {
@@ -166,12 +169,15 @@ public class Main {
 
 			int value = Math.abs(v);
 			int sign = v > 0 ? 1 : -1;
-			int yLimit = Math.min(p.y + value, N);
-			int xLimit = Math.min(p.x + value, N);
 
-			for (int y = Math.max(0, p.y - value + 1); y < yLimit; y++) {
+			int yBegin = Math.max(0, p.y - value + 1);
+			int xBegin = Math.max(0, p.x - value + 1);
+			int yEnd = Math.min(p.y + value, N);
+			int xEnd = Math.min(p.x + value, N);
+
+			for (int y = yBegin; y < yEnd; y++) {
 				int diffY = Math.abs(y - p.y);
-				for (int x = Math.max(0, p.x - value + 1); x < xLimit; x++) {
+				for (int x = xBegin; x < xEnd; x++) {
 					int diffX = Math.abs(x - p.x);
 					int diff = diffX + diffY;
 					if (diff < value) {
