@@ -1,11 +1,8 @@
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.SecureRandom;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.Random;
+import java.util.Collections;
 
 public class Main {
 
@@ -19,90 +16,90 @@ public class Main {
 			}
 		}
 
-		long score = 0;
-		int[][] output = new int[N][N];
-		Random random = new SecureRandom();
-
 		long startTime = System.currentTimeMillis();
+
+		Position[] positions = new Position[N * N];
+		for (int y = 0; y < N; y++) {
+			for (int x = 0; x < N; x++) {
+				positions[y * N + x] = new Position(x, y);
+			}
+		}
+		Collections.shuffle(Arrays.asList(positions));
+
+		Cell[] output = new Cell[1000];
+		Board board = new Board(N, A);
+		boolean[][] used = new boolean[N][N];
+		for (int i = 0; i < output.length; i++) {
+			Position position = positions[i];
+			int diff = board.getDiff(position);
+			int value = Math.min(75, Math.max(25, diff));
+			board.setValue(position, value);
+
+			output[i] = new Cell(position, value);
+			used[position.y][position.x] = true;
+		}
+
+		long score = board.getScore();
+		int index = output.length;
 		int count = 0;
 		do {
-			Board board = new Board(N);
-			int[][] temp = new int[N][N];
-
-			boolean[][] used = new boolean[N][N];
-			Cell[] next = new Cell[1500];
-			int index = 0;
-			while (index < next.length) {
-				int x = random.nextInt(N);
-				int y = random.nextInt(N);
-				if (used[y][x]) {
-					continue;
-				}
-
-				next[index++] = new Cell(x, y, A[y][x]);
-				used[y][x] = true;
+			Position newPosition = positions[index++ % positions.length];
+			if (used[newPosition.y][newPosition.x]) {
+				continue;
 			}
 
-			int loop = 0;
-			for (Cell cell : next) {
-				int diff = A[cell.y][cell.x] - board.getValue(cell.x, cell.y);
-				int value = Math.min(N - 18, diff / 18);
-				if (value <= 0) {
-					continue;
-				}
+			Board newBoard = board.copy();
+			int newDiff = newBoard.getDiff(newPosition);
+			int newValue = Math.min(80, Math.max(0, newDiff));
+			newBoard.setValue(newPosition, newValue);
 
-				board.setValue(cell.x, cell.y, value);
-				temp[cell.y][cell.x] += value;
+			long newScore = score;
+			Position oldPosition = null;
+			int oldValue = -1;
+			int oldIndex = -1;
+			for (int i = 0; i < output.length; i++) {
+				Cell cell = output[i];
 
-				if (++loop == 1000) {
-					break;
+				long tmpScore = newBoard.tmpScore(cell.getPosition(), -cell.getValue());
+				if (newScore < tmpScore) {
+					newScore = tmpScore;
+
+					oldPosition = cell.position;
+					oldValue = cell.getValue();
+					oldIndex = i;
 				}
 			}
 
-			long newScore = calcScore(A, board.board);
-			if (score < newScore) {
+			if (oldPosition != null) {
+				used[oldPosition.y][oldPosition.x] = false;
+				used[newPosition.y][newPosition.x] = true;
+
+				board.setValue(oldPosition, -oldValue);
+				board.setValue(newPosition, newValue);
+
+				output[oldIndex] = new Cell(newPosition, newValue);
 				score = newScore;
-				output = temp;
 			}
 
 			count++;
-		} while (System.currentTimeMillis() - startTime <= 5650);
+		} while (System.currentTimeMillis() - startTime <= 5750);
 
 		output(output);
-		debug(count);
+		debug(count, board.score);
 	}
 
-	private static long calcScore(int[][] begin, int[][] current) {
-		long sum = 0;
-		for (int i = 0; i < begin.length; i++) {
-			for (int j = 0; j < current.length; j++) {
-				sum += Math.abs(begin[i][j] - current[i][j]);
-			}
-		}
-
-		return 200_000_000 - sum;
-	}
-
-	public static void output(int[][] board) {
-		PriorityQueue<Cell> queue = new PriorityQueue<Cell>(Comparator.comparing(Cell::getValue).reversed());
-		for (int y = 0; y < board.length; y++) {
-			for (int x = 0; x < board[y].length; x++) {
-				queue.add(new Cell(x, y, board[y][x]));
-			}
-		}
-
+	public static void output(Cell[] cells) {
 		StringBuilder builder = new StringBuilder();
 		int count = 0;
-		for (int i = 0; i < 1000; i++) {
-			Cell cell = queue.poll();
+		for (Cell cell : cells) {
 			if (cell.value <= 0) {
-				break;
+				continue;
 			}
 			count++;
 
-			builder.append(cell.x)
+			builder.append(cell.getX())
 					.append(' ')
-					.append(cell.y)
+					.append(cell.getY())
 					.append(' ')
 					.append(cell.value)
 					.append(System.lineSeparator());
@@ -115,28 +112,97 @@ public class Main {
 
 	public static class Board {
 		int N;
+		int[][] A;
 		int[][] board;
 
-		public Board(int N) {
-			this.N = N;
-			this.board = new int[N][N];
+		long score;
+
+		public Board(int N, int[][] A) {
+			this(N, A, new int[N][N]);
 		}
 
-		public void setValue(int X, int Y, int value) {
-			int yLimit = Math.min(Y + value, N);
-			int xLimit = Math.min(X + value, N);
+		private Board(int N, int[][] A, int[][] board) {
+			this.N = N;
+			this.A = A;
+			this.board = board;
 
-			for (int y = Math.max(0, Y - value + 1); y < yLimit; y++) {
-				int diffY = Math.abs(y - Y);
-				for (int x = Math.max(0, X - value + 1); x < xLimit; x++) {
-					int diffX = Math.abs(x - X);
-					board[y][x] += Math.max(0, value - diffX - diffY);
+			this.score = 200_000_000;
+			for (int y = 0; y < board.length; y++) {
+				for (int x = 0; x < board[y].length; x++) {
+					score -= Math.abs(A[y][x] - board[y][x]);
 				}
 			}
 		}
 
-		public int getValue(int x, int y) {
-			return board[y][x];
+		public void setValue(Position p, int v) {
+			if (v == 0) {
+				return;
+			}
+
+			int value = Math.abs(v);
+			int sign = v > 0 ? 1 : -1;
+			int yLimit = Math.min(p.y + value, N);
+			int xLimit = Math.min(p.x + value, N);
+
+			for (int y = Math.max(0, p.y - value + 1); y < yLimit; y++) {
+				int diffY = Math.abs(y - p.y);
+				for (int x = Math.max(0, p.x - value + 1); x < xLimit; x++) {
+					int diffX = Math.abs(x - p.x);
+					int diff = diffX + diffY;
+					if (diff < value) {
+						score += Math.abs(A[y][x] - board[y][x]);
+						board[y][x] += v - (sign * diff);
+						score -= Math.abs(A[y][x] - board[y][x]);
+					}
+				}
+			}
+		}
+
+		public long tmpScore(Position p, int v) {
+			long score = this.score;
+			if (v == 0) {
+				return score;
+			}
+
+			int value = Math.abs(v);
+			int sign = v > 0 ? 1 : -1;
+			int yLimit = Math.min(p.y + value, N);
+			int xLimit = Math.min(p.x + value, N);
+
+			for (int y = Math.max(0, p.y - value + 1); y < yLimit; y++) {
+				int diffY = Math.abs(y - p.y);
+				for (int x = Math.max(0, p.x - value + 1); x < xLimit; x++) {
+					int diffX = Math.abs(x - p.x);
+					int diff = diffX + diffY;
+					if (diff < value) {
+						score += Math.abs(A[y][x] - board[y][x]);
+						score -= Math.abs(A[y][x] - (board[y][x] + v - (sign * diff)));
+					}
+				}
+			}
+
+			return score;
+		}
+
+		public int getValue(Position p) {
+			return board[p.y][p.x];
+		}
+
+		public int getDiff(Position p) {
+			return A[p.y][p.x] - board[p.y][p.x];
+		}
+
+		public long getScore() {
+			return score;
+		}
+
+		public Board copy() {
+			int[][] newBoard = new int[N][];
+			for (int i = 0; i < newBoard.length; i++) {
+				newBoard[i] = Arrays.copyOf(board[i], board[i].length);
+			}
+
+			return new Board(N, A, newBoard);
 		}
 
 		public String toString() {
@@ -152,16 +218,13 @@ public class Main {
 		}
 	}
 
-	public static class Cell {
+	public static class Position {
 		private int x;
 		private int y;
-		private int value;
 
-		public Cell(int x, int y, int value) {
-			super();
+		public Position(int x, int y) {
 			this.x = x;
 			this.y = y;
-			this.value = value;
 		}
 
 		public int getX() {
@@ -172,13 +235,40 @@ public class Main {
 			return y;
 		}
 
+		@Override
+		public String toString() {
+			return "Position [x=" + x + ", y=" + y + "]";
+		}
+	}
+
+	public static class Cell {
+		private Position position;
+		private int value;
+
+		public Cell(Position position, int value) {
+			this.position = position;
+			this.value = value;
+		}
+
+		public Position getPosition() {
+			return position;
+		}
+
+		public int getX() {
+			return position.x;
+		}
+
+		public int getY() {
+			return position.y;
+		}
+
 		public int getValue() {
 			return value;
 		}
 
 		@Override
 		public String toString() {
-			return "Cell [x=" + x + ", y=" + y + ", value=" + value + "]";
+			return "Cell [x=" + position.x + ", y=" + position.y + ", value=" + value + "]";
 		}
 	}
 
